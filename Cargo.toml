@@ -1,0 +1,13 @@
+[package]
+name = "metro_pi"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ableton-link = { git = "https://github.com/jmyhrman/ableton-link-rs" } # more recent fork than on crates.io
+
+gif2json = { git = "https://github.com/anzbert/gif2json" } # homemade gif-to-rgba converter
+
+rodio = "^0.15"
