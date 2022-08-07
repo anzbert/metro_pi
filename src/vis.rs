@@ -1,4 +1,5 @@
 use crate::constants::*;
+use rand::{thread_rng, Rng};
 
 // helper functions:
 fn array_to_coord(input: usize, grid_size_x: usize, grid_size_y: usize) -> (usize, usize) {
@@ -19,14 +20,14 @@ impl RGB8 {
     pub fn new(r: u8, g: u8, b: u8) -> Self {
         Self { r, g, b }
     }
-    pub fn rgb_to_mq_color(&self) -> Color {
-        Color {
-            r: self.r as f32 / 255.0,
-            g: self.g as f32 / 255.0,
-            b: self.b as f32 / 255.0,
-            a: 1.0,
-        }
-    }
+    // pub fn rgb_to_mq_color(&self) -> Color {
+    //     Color {
+    //         r: self.r as f32 / 255.0,
+    //         g: self.g as f32 / 255.0,
+    //         b: self.b as f32 / 255.0,
+    //         a: 1.0,
+    //     }
+    // }
     pub fn default() -> Self {
         Self {
             r: 50,
@@ -35,10 +36,11 @@ impl RGB8 {
         }
     }
     pub fn new_rnd() -> Self {
+        let mut rng = thread_rng();
         Self {
-            r: rand::gen_range(0, 255),
-            g: rand::gen_range(0, 255),
-            b: rand::gen_range(0, 255),
+            r: rng.gen_range(0..=255),
+            g: rng.gen_range(0..=255),
+            b: rng.gen_range(0..=255),
         }
     }
     // pub fn set_to(&mut self, r: u8, g: u8, b: u8) {
@@ -115,7 +117,7 @@ impl Leds {
                 let x = origin_x + distance_between_points * x as f32;
                 let y = origin_y + distance_between_points * y as f32;
 
-                draw_poly(x, y, 32, point_radius, 0.0, point.rgb_to_mq_color());
+                // draw_poly(x, y, 32, point_radius, 0.0, point.rgb_to_mq_color());
             }
         }
     }
