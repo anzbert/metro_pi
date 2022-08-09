@@ -6,8 +6,6 @@ mod vis;
 mod vis_console;
 use crate::{def_plugins::*, vis_console::VisConsole};
 
-use gif2json::RgbaImageData;
-
 fn main() {
     // INIT Plugins
     let plugins = Plugins {
@@ -42,7 +40,7 @@ fn main() {
     });
 
     // VISUALS options:
-    let mut vis_on = true;
+    // let mut vis_on = true;
 
     // ----------------------------------------------------------------------------------------------------------------
     // MAIN LOOP
@@ -59,12 +57,12 @@ fn main() {
             let beat = session_state.beat_at_time(time, quantum);
             let phase = session_state.phase_at_time(time, quantum);
 
-            let peers = link.num_peers();
-            let play = session_state.is_playing();
+            let _peers = link.num_peers();
+            let _playing = session_state.is_playing();
 
             // println!(
             //     "playing:{}, q:{:.2}, tempo:{:.2}, beat:{:.2}, phase:{:.2}, peers:{}",
-            //     play, quantum, tempo, beat, phase, peers
+            //     _playing, quantum, tempo, beat, phase, _peers
             // );
 
             // EVERY FULL BEAT:

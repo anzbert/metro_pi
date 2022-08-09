@@ -1,4 +1,5 @@
 use crate::def_const::{GRID_HEIGHT, GRID_WIDTH};
+use gif2json::RgbaImageData;
 use rgb::RGB8;
 
 pub struct Plugins<T: InputPlugin, U: VisPlugin> {
@@ -34,10 +35,5 @@ impl Input {
 pub trait VisPlugin {
     fn new() -> Self;
     fn update(self, array: &[RGB8; GRID_HEIGHT * GRID_WIDTH]);
-    fn select(&self, visual: Visual);
-}
-
-pub enum Visual {
-    Lines,
-    Circle,
+    fn select(&self, visual: RgbaImageData);
 }
