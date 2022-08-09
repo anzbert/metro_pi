@@ -1,6 +1,6 @@
 mod audio;
 mod constants;
-mod input;
+mod keyboard_input;
 mod vis;
 
 use gif2json::RgbaImageData;
@@ -9,6 +9,9 @@ fn main() {
     // INIT SOUND
     let audio_tx = audio::metro_audio_init();
     let sound_on = true;
+
+    // INIT INPUT
+    let input = keyboard_input::InputHandler::new();
 
     // Init LINK:
     let mut link = ableton_link::Link::new(120.0);
@@ -61,8 +64,10 @@ fn main() {
     // ----------------------------------------------------------------------------------------------------------------
     // MAIN LOOP
     loop {
-        // GET KEYBOARD INPUT
-        // input::check_input();
+        // Poll Input
+        if let Some(x) = input.poll() {
+            println!("{:?}", x)
+        }
 
         // GET CURRENT SESSION STATE:
         link.with_app_session_state(|session_state| {
@@ -74,10 +79,10 @@ fn main() {
             let peers = link.num_peers();
             let play = session_state.is_playing();
 
-            println!(
-                "playing:{}, q:{:.2}, tempo:{:.2}, beat:{:.2}, phase:{:.2}, peers:{}",
-                play, quantum, tempo, beat, phase, peers
-            );
+            // println!(
+            //     "playing:{}, q:{:.2}, tempo:{:.2}, beat:{:.2}, phase:{:.2}, peers:{}",
+            //     play, quantum, tempo, beat, phase, peers
+            // );
 
             // EVERY FULL BEAT:
             if beat - last_beat >= 1.0 {
@@ -88,8 +93,8 @@ fn main() {
                 // Trigger Sound:
                 if sound_on {
                     match phase.floor() as i32 {
-                        0 => audio_tx.send(1).unwrap(),
-                        _ => audio_tx.send(0).unwrap(),
+                        0 => audio_tx.send(1).unwrap(), // on the first beat
+                        _ => audio_tx.send(0).unwrap(), // on any other beat
                     }
                 }
             }

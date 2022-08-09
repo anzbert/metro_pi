@@ -26,6 +26,7 @@ pub fn metro_audio_init() -> Sender<u32> {
 
     let _audio_handle = thread::spawn(move || {
         let (_stream, stream_handle) = OutputStream::try_default().unwrap();
+
         let sound_0 = Sound::new("snd/met_mech.wav");
         let sound_1 = Sound::new("snd/met_elec.wav");
 
