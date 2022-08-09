@@ -1,7 +1,9 @@
 mod audio;
 mod constants;
-mod keyboard_input;
+mod input_keyboard;
+mod traits;
 mod vis;
+use crate::traits::*;
 
 use gif2json::RgbaImageData;
 
@@ -11,7 +13,7 @@ fn main() {
     let sound_on = true;
 
     // INIT INPUT
-    let input = keyboard_input::InputHandler::new();
+    let input = input_keyboard::InputHandler::new();
 
     // Init LINK:
     let mut link = ableton_link::Link::new(120.0);

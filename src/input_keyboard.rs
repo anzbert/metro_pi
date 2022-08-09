@@ -3,30 +3,15 @@ use std::io::stdin;
 use std::sync::mpsc::{Receiver, Sender};
 use std::thread;
 
-#[derive(Debug)]
-pub struct Input {
-    pub left: bool,
-    pub right: bool,
-    pub button: bool,
-}
-
-impl Input {
-    pub fn new(left: bool, right: bool, button: bool) -> Self {
-        Self {
-            left,
-            right,
-            button,
-        }
-    }
-}
+use crate::traits::*;
 
 pub struct InputHandler {
     poll_tx: Sender<String>,
     poll_rx: Receiver<Option<String>>,
 }
 
-impl InputHandler {
-    pub fn new() -> Self {
+impl InputPlugin for InputHandler {
+    fn new() -> Self {
         let (poll_tx, other_thread_rx): (Sender<String>, Receiver<String>) =
             std::sync::mpsc::channel();
         let (other_thread_tx, poll_rx): (Sender<Option<String>>, Receiver<Option<String>>) =
@@ -56,7 +41,7 @@ impl InputHandler {
         InputHandler { poll_tx, poll_rx }
     }
 
-    pub fn poll(&self) -> Option<Input> {
+    fn poll(&self) -> Option<Input> {
         self.poll_tx.send("poll".to_string()).unwrap();
 
         match self.poll_rx.try_recv() {
