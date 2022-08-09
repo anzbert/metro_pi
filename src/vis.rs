@@ -1,7 +1,7 @@
 use crate::constants::*;
 use rand::{thread_rng, Rng};
 
-// helper functions:
+/// Grid by index to Tuple(x,y)
 fn array_to_coord(input: usize, grid_size_x: usize, grid_size_y: usize) -> (usize, usize) {
     let x = input % grid_size_x;
     let y = input / grid_size_y;
@@ -20,14 +20,6 @@ impl RGB8 {
     pub fn new(r: u8, g: u8, b: u8) -> Self {
         Self { r, g, b }
     }
-    // pub fn rgb_to_mq_color(&self) -> Color {
-    //     Color {
-    //         r: self.r as f32 / 255.0,
-    //         g: self.g as f32 / 255.0,
-    //         b: self.b as f32 / 255.0,
-    //         a: 1.0,
-    //     }
-    // }
     pub fn default() -> Self {
         Self {
             r: 50,
@@ -43,11 +35,6 @@ impl RGB8 {
             b: rng.gen_range(0..=255),
         }
     }
-    // pub fn set_to(&mut self, r: u8, g: u8, b: u8) {
-    //     self.r = r;
-    //     self.g = g;
-    //     self.b = b;
-    // }
 }
 
 pub struct Leds {
@@ -100,25 +87,5 @@ impl Leds {
 
     pub fn update_pixel(&mut self, x: usize, y: usize, new_color: RGB8) {
         self.grid[x][y] = new_color;
-    }
-
-    pub fn draw_centered(&self) {
-        let smaller_side = if WIDTH <= HEIGHT { WIDTH } else { HEIGHT };
-        let drawing_square = smaller_side as f32 * SCREEN_MARGIN;
-
-        let distance_between_points = drawing_square / GRID_WIDTH as f32;
-        let point_radius = distance_between_points as f32 * POINT_MARGIN / 2.0;
-
-        let origin_x = WIDTH as f32 / 2.0 - drawing_square / 2.0 + distance_between_points / 2.0;
-        let origin_y = HEIGHT as f32 / 2.0 - drawing_square / 2.0 + distance_between_points / 2.0;
-
-        for (x, column) in self.grid.iter().enumerate() {
-            for (y, point) in column.iter().enumerate() {
-                let x = origin_x + distance_between_points * x as f32;
-                let y = origin_y + distance_between_points * y as f32;
-
-                // draw_poly(x, y, 32, point_radius, 0.0, point.rgb_to_mq_color());
-            }
-        }
     }
 }

@@ -708,7 +708,6 @@ dependencies = [
  "gif2json",
  "rand",
  "rodio",
- "rs_ws281x",
 ]
 
 [[package]]
@@ -1139,17 +1138,6 @@ dependencies = [
  "hound",
  "lewton",
  "minimp3",
-]
-
-[[package]]
-name = "rs_ws281x"
-version = "0.4.3"
-source = "git+https://github.com/anzbert/rpi-ws281x-rust#2a8cf0cc5354c8ac6b3d30813ed04f887b6d7fcf"
-dependencies = [
- "bindgen",
- "cc",
- "serde",
- "serde_derive",
 ]
 
 [[package]]

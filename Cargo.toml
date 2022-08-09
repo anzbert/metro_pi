@@ -14,4 +14,4 @@ rodio = "^0.15"
 
 rand = "*"
 
-rs_ws281x = { git = "https://github.com/anzbert/rpi-ws281x-rust" } # includes updated bindgen dependency
+# rs_ws281x = { git = "https://github.com/anzbert/rpi-ws281x-rust" } # includes updated bindgen dependency

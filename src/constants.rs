@@ -1,10 +1,5 @@
-pub const WIDTH: i32 = 1000;
-pub const HEIGHT: i32 = 500;
-
 pub const GRID_HEIGHT: usize = 8;
 pub const GRID_WIDTH: usize = 8;
-pub const SCREEN_MARGIN: f32 = 0.9;
-pub const POINT_MARGIN: f32 = 0.9;
 
 #[allow(unused_allocation)]
 pub const CLOCK: [(usize, usize); 28] = [
