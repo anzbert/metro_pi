@@ -1,19 +1,23 @@
 mod audio;
-mod constants;
+mod def_const;
+mod def_plugins;
 mod input_keyboard;
-mod traits;
 mod vis;
-use crate::traits::*;
+mod vis_console;
+use crate::{def_plugins::*, vis_console::VisConsole};
 
 use gif2json::RgbaImageData;
 
 fn main() {
+    // INIT Plugins
+    let plugins = Plugins {
+        input: input_keyboard::InputHandler::new(),
+        vis: VisConsole::new(),
+    };
+
     // INIT SOUND
     let audio_tx = audio::metro_audio_init();
     let sound_on = true;
-
-    // INIT INPUT
-    let input = input_keyboard::InputHandler::new();
 
     // Init LINK:
     let mut link = ableton_link::Link::new(120.0);
@@ -37,37 +41,14 @@ fn main() {
         last_tempo = tempo;
     });
 
-    // Init VISUALS:
+    // VISUALS options:
     let mut vis_on = true;
-
-    #[derive(PartialEq, Debug)]
-    enum Vis {
-        Off,
-        One,
-        Two,
-        Three,
-        Four,
-    }
-    let mut vis_selected = Vis::One;
-
-    let mut vis_numbers = true;
-
-    let mut leds = vis::Leds::new();
-    let mut new_color_on_beat = vis::RGB8::new_rnd();
-
-    // Init the GIFs:
-    let gif_counter =
-        RgbaImageData::new_from_bytes(include_bytes!("../img/counter_alpha.gif")).unwrap();
-    let gif_clock = RgbaImageData::new_from_bytes(include_bytes!("../img/clock.gif")).unwrap();
-    let gif_rows = RgbaImageData::new_from_bytes(include_bytes!("../img/rows_alpha.gif")).unwrap();
-    let gif_circular =
-        RgbaImageData::new_from_bytes(include_bytes!("../img/circular.gif")).unwrap();
 
     // ----------------------------------------------------------------------------------------------------------------
     // MAIN LOOP
     loop {
         // Poll Input
-        if let Some(x) = input.poll() {
+        if let Some(x) = plugins.input.poll() {
             println!("{:?}", x)
         }
 

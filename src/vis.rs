@@ -1,40 +1,21 @@
-use crate::constants::*;
-use rand::{thread_rng, Rng};
+use crate::def_const::*;
+use gif2json::RgbaImageData;
+use rgb::RGB8;
+
+fn init_gifs() -> Vec<RgbaImageData> {
+    vec![
+        RgbaImageData::new_from_bytes(include_bytes!("../img/clock.gif")).unwrap(),
+        RgbaImageData::new_from_bytes(include_bytes!("../img/counter_alpha.gif")).unwrap(),
+        RgbaImageData::new_from_bytes(include_bytes!("../img/rows_alpha.gif")).unwrap(),
+        RgbaImageData::new_from_bytes(include_bytes!("../img/circular.gif")).unwrap(),
+    ]
+}
 
 /// Grid by index to Tuple(x,y)
 fn array_to_coord(input: usize, grid_size_x: usize, grid_size_y: usize) -> (usize, usize) {
     let x = input % grid_size_x;
     let y = input / grid_size_y;
     (x, y)
-}
-
-#[derive(PartialEq, Debug, Clone, Copy)]
-pub struct RGB8 {
-    r: u8,
-    g: u8,
-    b: u8,
-}
-
-#[allow(dead_code)]
-impl RGB8 {
-    pub fn new(r: u8, g: u8, b: u8) -> Self {
-        Self { r, g, b }
-    }
-    pub fn default() -> Self {
-        Self {
-            r: 50,
-            g: 50,
-            b: 50,
-        }
-    }
-    pub fn new_rnd() -> Self {
-        let mut rng = thread_rng();
-        Self {
-            r: rng.gen_range(0..=255),
-            g: rng.gen_range(0..=255),
-            b: rng.gen_range(0..=255),
-        }
-    }
 }
 
 pub struct Leds {

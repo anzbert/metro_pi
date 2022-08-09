@@ -1,3 +1,5 @@
+use gif2json::RgbaImageData;
+
 pub const GRID_HEIGHT: usize = 8;
 pub const GRID_WIDTH: usize = 8;
 
