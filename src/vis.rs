@@ -1,6 +1,5 @@
 use crate::def_settings::Visualization;
 use gif2json::RgbaImageData;
-
 use std::collections::HashMap;
 
 pub fn init_gifs() -> HashMap<Visualization, RgbaImageData> {
@@ -25,8 +24,6 @@ pub fn init_gifs() -> HashMap<Visualization, RgbaImageData> {
 
     map
 }
-
-
 
 // pub struct Leds {
 //     grid: [[RGB8; GRID_HEIGHT]; GRID_WIDTH],

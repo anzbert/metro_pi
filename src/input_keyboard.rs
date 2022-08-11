@@ -1,9 +1,7 @@
+use crate::def_plugins::*;
 use std::io::stdin;
-
 use std::sync::mpsc::{Receiver, Sender};
 use std::thread;
-
-use crate::def_plugins::*;
 
 pub struct InputHandler {
     poll_tx: Sender<String>,

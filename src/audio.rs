@@ -1,9 +1,8 @@
+use rodio::*;
+use rodio::{source::Source, Decoder, OutputStream};
 use std::io::Cursor;
 use std::sync::mpsc::{Receiver, Sender};
 use std::thread;
-
-use rodio::*;
-use rodio::{source::Source, Decoder, OutputStream};
 
 #[derive(Clone)]
 struct Sound {

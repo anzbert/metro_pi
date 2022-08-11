@@ -6,10 +6,9 @@ mod input_keyboard;
 mod utilities;
 mod vis;
 mod vis_console;
-use def_settings::{Settings, Visualization};
-use vis::init_gifs;
 
 use crate::{def_plugins::*, vis_console::VisConsole};
+use def_settings::{Settings, Visualization};
 
 fn main() {
     // INIT Plugins
@@ -19,7 +18,7 @@ fn main() {
     };
 
     // SETTINGS:
-    let visuals = init_gifs();
+    let gifs = vis::init_gifs();
 
     let mut settings = Settings {
         visual: Visualization::Clock,
@@ -77,6 +76,7 @@ fn main() {
                 last_beat = beat.floor(); // zero to last full beat
 
                 // DRAW OUTPUT:
+                // TODO!!
 
                 // TRIGGER SOUND:
                 if settings.sound_enabled {

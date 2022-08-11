@@ -9,6 +9,8 @@ pub struct Settings {
     pub brightness: u8,
 }
 
+// impl Settings {}
+
 #[derive(Eq, PartialEq, Hash)]
 pub enum Visualization {
     Clock,
