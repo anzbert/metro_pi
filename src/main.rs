@@ -1,9 +1,14 @@
 mod audio;
 mod def_const;
 mod def_plugins;
+mod def_settings;
 mod input_keyboard;
+mod utilities;
 mod vis;
 mod vis_console;
+use def_settings::{Settings, Visualization};
+use vis::init_gifs;
+
 use crate::{def_plugins::*, vis_console::VisConsole};
 
 fn main() {
@@ -13,50 +18,52 @@ fn main() {
         vis: VisConsole::new(),
     };
 
+    // SETTINGS:
+    let visuals = init_gifs();
+
+    let mut settings = Settings {
+        visual: Visualization::Clock,
+        brightness: 100,
+        sound_enabled: true,
+        volume: 100,
+        link_enabled: true,
+        tempo: 120.0,
+        quantum: 4.0,
+    };
+
     // INIT SOUND
     let audio_tx = audio::metro_audio_init();
-    let sound_on = true;
 
-    // Init LINK:
+    // INIT LINK:
     let mut link = ableton_link::Link::new(120.0);
+    let clock = link.clock();
     link.enable(true);
-
-    let link_enabled = true;
     link.enable_start_stop_sync(true);
 
-    let clock = link.clock();
-    let quantum = 4.0;
-
-    let mut tempo: f64 = 0.0;
-
-    // Remember prev values:
+    // value buffer
     let mut last_tempo: f64 = 0.0;
     let mut last_beat: f64 = 0.0;
 
     // Init Values
     link.with_app_session_state(|ss| {
-        tempo = ss.tempo();
-        last_tempo = tempo;
+        settings.tempo = ss.tempo();
+        last_tempo = settings.tempo;
     });
 
-    // VISUALS options:
-    // let mut vis_on = true;
-
-    // ----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
     // MAIN LOOP
     loop {
-        // Poll Input
+        // POLL INPUT
         if let Some(x) = plugins.input.poll() {
             println!("{:?}", x)
         }
 
         // GET CURRENT SESSION STATE:
         link.with_app_session_state(|session_state| {
-            tempo = session_state.tempo();
+            settings.tempo = session_state.tempo();
             let time = clock.micros();
-            let beat = session_state.beat_at_time(time, quantum);
-            let phase = session_state.phase_at_time(time, quantum);
-
+            let beat = session_state.beat_at_time(time, settings.quantum);
+            let phase = session_state.phase_at_time(time, settings.quantum);
             let _peers = link.num_peers();
             let _playing = session_state.is_playing();
 
@@ -67,12 +74,12 @@ fn main() {
 
             // EVERY FULL BEAT:
             if beat - last_beat >= 1.0 {
-                last_beat = beat.floor(); // re-calibrate to full beat
+                last_beat = beat.floor(); // zero to last full beat
 
-                // new_color_on_beat = vis::RGB8::new_rnd(); // change this color value every beat
+                // DRAW OUTPUT:
 
-                // Trigger Sound:
-                if sound_on {
+                // TRIGGER SOUND:
+                if settings.sound_enabled {
                     match phase.floor() as i32 {
                         0 => audio_tx.send(1).unwrap(), // on the first beat
                         _ => audio_tx.send(0).unwrap(), // on any other beat
@@ -82,17 +89,17 @@ fn main() {
         });
 
         // UPDATE LINK WITH CONTROL CHANGES:
-        if link_enabled {
+        if settings.link_enabled {
             link.enable(true);
         } else {
             link.enable(false);
         }
-        if !last_tempo.eq(&tempo) {
-            link.with_app_session_state(|mut ff| {
-                ff.set_tempo(tempo, clock.micros());
-                ff.commit();
+        if !last_tempo.eq(&settings.tempo) {
+            link.with_app_session_state(|mut session_state| {
+                session_state.set_tempo(settings.tempo, clock.micros());
+                session_state.commit();
             });
-            last_tempo = tempo;
+            last_tempo = settings.tempo;
         }
     }
 }

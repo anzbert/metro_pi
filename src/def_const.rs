@@ -2,7 +2,7 @@ pub const GRID_HEIGHT: usize = 8;
 pub const GRID_WIDTH: usize = 8;
 
 #[allow(unused_allocation)]
-pub const CLOCK: [(usize, usize); 28] = [
+pub const _CLOCK: [(usize, usize); 28] = [
     (0, 0),
     (1, 0),
     (2, 0),
