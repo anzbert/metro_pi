@@ -34,6 +34,6 @@ impl Input {
 // VIS
 pub trait VisPlugin {
     fn new() -> Self;
-    fn update(self, array: &[RGB8; GRID_HEIGHT * GRID_WIDTH]);
+    fn update(&mut self, phase: u32);
     fn select(&self, visual: RgbaImageData);
 }

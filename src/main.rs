@@ -5,16 +5,18 @@ mod def_settings;
 mod input_keyboard;
 mod utilities;
 mod vis;
-mod vis_console;
+// mod vis_console;
+mod vis_led;
 
-use crate::{def_plugins::*, vis_console::VisConsole};
+use crate::def_plugins::*;
 use def_settings::{Settings, Visualization};
+use vis_led::VisLed;
 
 fn main() {
     // INIT Plugins
-    let plugins = Plugins {
+    let mut plugins = Plugins {
         input: input_keyboard::InputHandler::new(),
-        vis: VisConsole::new(),
+        vis: VisLed::new(),
     };
 
     // SETTINGS:
@@ -76,11 +78,11 @@ fn main() {
                 last_beat = beat.floor(); // zero to last full beat
 
                 // DRAW OUTPUT:
-                // TODO!!
+                plugins.vis.update(phase.floor() as u32);
 
                 // TRIGGER SOUND:
                 if settings.sound_enabled {
-                    match phase.floor() as i32 {
+                    match phase.floor() as u32 {
                         0 => audio_tx.send(1).unwrap(), // on the first beat
                         _ => audio_tx.send(0).unwrap(), // on any other beat
                     }
