@@ -83,19 +83,19 @@ impl RgbaImageData {
         }
     }
 
-    pub fn get_frame_vec_ref(&self, frame: usize) -> Option<&Vec<(u8, u8, u8, u8)>> {
+    pub fn _get_frame_vec_ref(&self, frame: usize) -> Option<&Vec<(u8, u8, u8, u8)>> {
         match self.frames.get(frame) {
             Some(f) => Some(&f.pixels),
             None => None,
         }
     }
-    pub fn get_frame_delay(&self, frame: usize) -> Option<(u32, u32)> {
+    pub fn _get_frame_delay(&self, frame: usize) -> Option<(u32, u32)> {
         match self.frames.get(frame) {
             Some(f) => Some(f.delay_ratio),
             None => None,
         }
     }
-    pub fn get_dimensions(&self) -> (u32, u32) {
+    pub fn _get_dimensions(&self) -> (u32, u32) {
         self.dimensions
     }
     fn add(&mut self, next_frame: DecodedFrame) {

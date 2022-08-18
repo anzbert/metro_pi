@@ -9,12 +9,16 @@ mod vis_led;
 use crate::def_plugins::*;
 use def_settings::Settings;
 use gifs::Visualization;
+use gifs::GIFS;
 use vis_led::VisLed;
 
 fn main() {
     // PLUGINS
     let input_plugin = input_keyboard::InputHandler::new();
     let mut vis_plugin = VisLed::new();
+
+    let all_vis: Vec<&Visualization> = GIFS.keys().collect();
+    let mut current_vis_index: usize = 0;
 
     // SETTINGS
     let mut settings: Settings = Settings {
@@ -27,33 +31,30 @@ fn main() {
         quantum: 4.0,
     };
 
-    vis_plugin.select(settings.visual);
+    // vis_plugin.select(settings.visual);
+    vis_plugin.select(Visualization::Clock);
 
     // INIT SOUND
     let audio_tx = audio::metro_audio_init();
 
     // INIT LINK:
-    let mut link = ableton_link::Link::new(120.0);
+    let mut link = ableton_link::Link::new(settings.tempo);
     let clock = link.clock();
     link.enable(true);
     link.enable_start_stop_sync(true);
 
-    // Init link buffer values
-    let mut last_tempo: f64 = 0.0;
+    let mut last_tempo: f64 = settings.tempo;
     let mut last_beat: f64 = 0.0;
-
-    // Get Startup Link Values
-    link.with_app_session_state(|ss| {
-        settings.tempo = ss.tempo();
-        last_tempo = settings.tempo;
-    });
 
     // ----------------------------------------------------------------------------
     // MAIN LOOP
     loop {
         // POLL INPUT
         if let Some(x) = input_plugin.poll() {
-            println!("{:?}", x)
+            println!("received: {:?}", x);
+            current_vis_index = (current_vis_index + 1) % (all_vis.len() - 1);
+
+            vis_plugin.select(**all_vis.get(current_vis_index).unwrap());
         }
 
         // GET CURRENT SESSION STATE:
@@ -67,15 +68,20 @@ fn main() {
 
             // println!(
             //     "playing:{}, q:{:.2}, tempo:{:.2}, beat:{:.2}, phase:{:.2}, peers:{}",
-            //     _playing, quantum, tempo, beat, phase, _peers
+            //     _playing,
+            //     settings.quantum,
+            //     session_state.tempo(),
+            //     beat,
+            //     phase,
+            //     _peers
             // );
+
+            // DRAW OUTPUT:
+            vis_plugin.update(settings.quantum, phase);
 
             // EVERY FULL BEAT:
             if beat - last_beat >= 1.0 {
                 last_beat = beat.floor(); // zero to last full beat
-
-                // DRAW OUTPUT:
-                vis_plugin.update(settings.quantum, phase.floor());
 
                 // TRIGGER SOUND:
                 if settings.sound_enabled {

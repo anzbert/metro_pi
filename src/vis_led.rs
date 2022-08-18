@@ -3,7 +3,6 @@ use crate::{
     def_plugins::VisPlugin,
     gifs::{self, RgbaImageData, Visualization},
 };
-use rgb::RGB8;
 use rs_ws281x::*;
 
 pub struct VisLed<'a> {
@@ -24,7 +23,7 @@ impl VisPlugin for VisLed<'_> {
                         .pin(10) // GPIO 10 = SPI0 MOSI
                         .count(64) // Number of LEDs
                         .strip_type(StripType::Ws2812)
-                        .brightness(8) // default: 255
+                        .brightness(3) // default: 255
                         .build(),
                 )
                 .build()
