@@ -13,26 +13,23 @@ use gifs::GIFS;
 use vis_led::VisLed;
 
 fn main() {
-    // PLUGINS
-    let input_plugin = input_keyboard::InputHandler::new();
-    let mut vis_plugin = VisLed::new();
-
-    let all_vis: Vec<&Visualization> = GIFS.keys().collect();
-    let mut current_vis_index: usize = 0;
-
     // SETTINGS
     let mut settings: Settings = Settings {
         visual: Visualization::default(),
-        brightness: 15,
+        brightness: 3,
         sound_enabled: true,
-        volume: 100,
+        volume: 100, // todo
         link_enabled: true,
         tempo: 120.0,
         quantum: 4.0,
     };
 
-    // vis_plugin.select(settings.visual);
-    vis_plugin.select(Visualization::Clock);
+    // PLUGINS
+    let input_plugin = input_keyboard::InputHandler::new();
+    let mut vis_plugin = VisLed::new(settings.visual, settings.brightness);
+
+    let all_vis: Vec<&Visualization> = GIFS.keys().collect();
+    let mut current_vis_index: usize = 0;
 
     // INIT SOUND
     let audio_tx = audio::metro_audio_init();
@@ -46,9 +43,9 @@ fn main() {
     let mut last_tempo: f64 = settings.tempo;
     let mut last_beat: f64 = 0.0;
 
-    // ----------------------------------------------------------------------------
-    // MAIN LOOP
-    loop {
+    // ---------------------------------------------------------------------------- //
+    #[allow(unused_labels)]
+    'main: loop {
         // POLL INPUT
         if let Some(x) = input_plugin.poll() {
             println!("received: {:?}", x);

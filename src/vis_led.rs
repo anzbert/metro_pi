@@ -12,7 +12,7 @@ pub struct VisLed<'a> {
 }
 
 impl VisPlugin for VisLed<'_> {
-    fn new() -> Self {
+    fn new(visual: Visualization, brightness: u8) -> Self {
         Self {
             controller: ControllerBuilder::new()
                 .freq(800_000)
@@ -23,12 +23,12 @@ impl VisPlugin for VisLed<'_> {
                         .pin(10) // GPIO 10 = SPI0 MOSI
                         .count(64) // Number of LEDs
                         .strip_type(StripType::Ws2812)
-                        .brightness(3) // default: 255
+                        .brightness(brightness) // default: 255
                         .build(),
                 )
                 .build()
                 .unwrap(),
-            gif: gifs::GIFS.get(&Visualization::default()).unwrap(),
+            gif: gifs::GIFS.get(&visual).unwrap(),
             last_frame: 0,
         }
     }
@@ -67,5 +67,9 @@ impl VisPlugin for VisLed<'_> {
                 pixels_in_first_gif_frame
             );
         }
+    }
+
+    fn set_brightness(&mut self, value: u8) {
+        self.controller.set_brightness(0, value);
     }
 }

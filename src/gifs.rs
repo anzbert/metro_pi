@@ -7,15 +7,21 @@ use std::result::Result;
 
 #[derive(Eq, PartialEq, Hash, Clone, Copy)]
 pub enum Visualization {
-    Rows,
-    Clock,
-    Counter,
-    Circular,
+    Rows(VisType),
+    Clock(VisType),
+    Counter(VisType),
+    Circular(VisType),
+}
+
+#[derive(Eq, PartialEq, Hash, Clone, Copy)]
+pub enum VisType {
+    Gif,
+    // Algorithm,
 }
 
 impl Default for Visualization {
     fn default() -> Self {
-        Self::Rows
+        Self::Rows(VisType::Gif)
     }
 }
 
@@ -24,19 +30,19 @@ lazy_static! {
         let mut map = HashMap::new();
 
         map.insert(
-            Visualization::Clock,
+            Visualization::Clock(VisType::Gif),
             RgbaImageData::new_from_bytes(include_bytes!("../img/clock.gif")).unwrap(),
         );
         map.insert(
-            Visualization::Counter,
+            Visualization::Counter(VisType::Gif),
             RgbaImageData::new_from_bytes(include_bytes!("../img/counter_alpha.gif")).unwrap(),
         );
         map.insert(
-            Visualization::Rows,
+            Visualization::Rows(VisType::Gif),
             RgbaImageData::new_from_bytes(include_bytes!("../img/rows_alpha.gif")).unwrap(),
         );
         map.insert(
-            Visualization::Circular,
+            Visualization::Circular(VisType::Gif),
             RgbaImageData::new_from_bytes(include_bytes!("../img/circular.gif")).unwrap(),
         );
 

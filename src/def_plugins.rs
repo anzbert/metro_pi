@@ -25,7 +25,8 @@ impl Input {
 
 // VIS
 pub trait VisPlugin {
-    fn new() -> Self;
+    fn new(visual: Visualization, brightness: u8) -> Self;
     fn update(&mut self, quantum: f64, phase: f64);
     fn select(&mut self, visual: Visualization);
+    fn set_brightness(&mut self, value: u8);
 }
