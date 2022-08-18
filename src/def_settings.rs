@@ -1,3 +1,5 @@
+use crate::gifs::Visualization;
+
 #[derive(PartialEq)]
 pub struct Settings {
     pub visual: Visualization,
@@ -10,11 +12,3 @@ pub struct Settings {
 }
 
 // impl Settings {}
-
-#[derive(Eq, PartialEq, Hash)]
-pub enum Visualization {
-    Clock,
-    Counter,
-    Rows,
-    Circular,
-}

@@ -476,7 +476,6 @@ dependencies = [
 [[package]]
 name = "gif2json"
 version = "0.1.1"
-source = "git+https://github.com/anzbert/gif2json#dda42131552b5e692a4b8946fed1ff289f1f127e"
 dependencies = [
  "image",
  "serde",
@@ -706,6 +705,7 @@ version = "0.1.0"
 dependencies = [
  "ableton-link",
  "gif2json",
+ "lazy_static",
  "rand",
  "rgb",
  "rodio",

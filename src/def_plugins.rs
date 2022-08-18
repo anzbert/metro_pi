@@ -1,12 +1,8 @@
-use crate::def_const::{GRID_HEIGHT, GRID_WIDTH};
+use crate::{
+    def_const::{GRID_HEIGHT, GRID_WIDTH},
+    gifs::Visualization,
+};
 use gif2json::RgbaImageData;
-use rgb::RGB8;
-
-pub struct Plugins<T: InputPlugin, U: VisPlugin> {
-    pub input: T,
-    pub vis: U,
-    // sound: V,
-}
 
 // INPUT
 pub trait InputPlugin {
@@ -34,6 +30,6 @@ impl Input {
 // VIS
 pub trait VisPlugin {
     fn new() -> Self;
-    fn update(&mut self, phase: u32);
-    fn select(&self, visual: RgbaImageData);
+    fn update(&mut self, quantum: f64, phase: f64);
+    fn select(&mut self, visual: Visualization);
 }

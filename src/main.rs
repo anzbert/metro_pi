@@ -2,28 +2,25 @@ mod audio;
 mod def_const;
 mod def_plugins;
 mod def_settings;
+mod gifs;
 mod input_keyboard;
 mod utilities;
-mod vis;
-// mod vis_console;
 mod vis_led;
 
 use crate::def_plugins::*;
-use def_settings::{Settings, Visualization};
+use def_settings::Settings;
+use gif2json::RgbaImageData;
+use gifs::Visualization;
 use vis_led::VisLed;
 
 fn main() {
-    // INIT Plugins
-    let mut plugins = Plugins {
-        input: input_keyboard::InputHandler::new(),
-        vis: VisLed::new(),
-    };
+    // PLUGINS
+    let input_plugin = input_keyboard::InputHandler::new();
+    let mut vis_plugin = VisLed::new();
 
-    // SETTINGS:
-    let gifs = vis::init_gifs();
-
+    // SETTINGS
     let mut settings = Settings {
-        visual: Visualization::Clock,
+        visual: Visualization::default(),
         brightness: 100,
         sound_enabled: true,
         volume: 100,
@@ -41,11 +38,11 @@ fn main() {
     link.enable(true);
     link.enable_start_stop_sync(true);
 
-    // value buffer
+    // Init link buffer values
     let mut last_tempo: f64 = 0.0;
     let mut last_beat: f64 = 0.0;
 
-    // Init Values
+    // Get Startup Link Values
     link.with_app_session_state(|ss| {
         settings.tempo = ss.tempo();
         last_tempo = settings.tempo;
@@ -55,7 +52,7 @@ fn main() {
     // MAIN LOOP
     loop {
         // POLL INPUT
-        if let Some(x) = plugins.input.poll() {
+        if let Some(x) = input_plugin.poll() {
             println!("{:?}", x)
         }
 
@@ -78,7 +75,7 @@ fn main() {
                 last_beat = beat.floor(); // zero to last full beat
 
                 // DRAW OUTPUT:
-                plugins.vis.update(phase.floor() as u32);
+                vis_plugin.update(settings.quantum, phase.floor());
 
                 // TRIGGER SOUND:
                 if settings.sound_enabled {
