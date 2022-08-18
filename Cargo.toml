@@ -9,9 +9,11 @@ edition = "2021"
 rand = "*"
 lazy_static = "1.4.0"
 
+image = "^0.24.3"
+
 ableton-link = { git = "https://github.com/jmyhrman/ableton-link-rs" } # more recent fork than on crates.io
 # gif2json = { git = "https://github.com/anzbert/gif2json" }             # homemade gif-to-rgba converter
-gif2json = { path = "../gif2json" } # homemade gif-to-rgba converter
+# gif2json = { path = "../gif2json" } # homemade gif-to-rgba converter
 
 rgb = "^0.8.33"
 # termion = "1.5.6"

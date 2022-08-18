@@ -1,8 +1,4 @@
-use crate::{
-    def_const::{GRID_HEIGHT, GRID_WIDTH},
-    gifs::Visualization,
-};
-use gif2json::RgbaImageData;
+use crate::gifs::Visualization;
 
 // INPUT
 pub trait InputPlugin {

@@ -6,10 +6,8 @@ mod gifs;
 mod input_keyboard;
 mod utilities;
 mod vis_led;
-
 use crate::def_plugins::*;
 use def_settings::Settings;
-use gif2json::RgbaImageData;
 use gifs::Visualization;
 use vis_led::VisLed;
 
@@ -19,15 +17,17 @@ fn main() {
     let mut vis_plugin = VisLed::new();
 
     // SETTINGS
-    let mut settings = Settings {
+    let mut settings: Settings = Settings {
         visual: Visualization::default(),
-        brightness: 100,
+        brightness: 15,
         sound_enabled: true,
         volume: 100,
         link_enabled: true,
         tempo: 120.0,
         quantum: 4.0,
     };
+
+    vis_plugin.select(settings.visual);
 
     // INIT SOUND
     let audio_tx = audio::metro_audio_init();
