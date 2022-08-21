@@ -1,18 +1,19 @@
 #!/bin/bash
 
 ARG=$1
-PW="pi"
+# IP=$2
 # REMOTE=pi@raspberrypi.local
 
 case $ARG in
 mkdir)
-    sshpass -p $PW ssh -v pi@raspberrypi.local 'mkdir -p ~/build'
+    ssh -v pi@raspberrypi.local 'mkdir -p ~/build'
     ;;
 debug)
-    sshpass -p $PW scp -o LogLevel=VERBOSE target/debug/metro_pi pi@raspberrypi.local:~/build/
+    scp -o LogLevel=VERBOSE target/debug/metro_pi pi@raspberrypi.local:~/build/
+    # rsync -p -v target/debug/metro_pi pi@raspberrypi.local:~/build/
     ;;
 release)
-    sshpass -p $PW scp -o LogLevel=VERBOSE target/release/metro_pi pi@raspberrypi.local:~/build/
+    scp -o LogLevel=VERBOSE target/release/metro_pi pi@raspberrypi.local:~/build/
     ;;
 *)
 
