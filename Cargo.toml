@@ -18,6 +18,6 @@ ableton-link = { git = "https://github.com/jmyhrman/ableton-link-rs" } # more re
 rgb = "^0.8.33"
 # termion = "1.5.6"
 
-rodio = "^0.15"
+rodio = "0.15.0"
 
 rs_ws281x = { git = "https://github.com/rpi-ws281x/rpi-ws281x-rust" }
