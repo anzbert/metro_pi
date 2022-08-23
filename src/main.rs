@@ -6,11 +6,13 @@ mod gifs;
 mod input_keyboard;
 mod utilities;
 mod vis_led;
+mod vis_null;
 use crate::def_plugins::*;
 use def_settings::Settings;
 use gifs::Visualization;
 use gifs::GIFS;
 use vis_led::VisLed;
+use vis_null::VisNull;
 
 fn main() {
     // SETTINGS
@@ -26,7 +28,8 @@ fn main() {
 
     // PLUGINS
     let input_plugin = input_keyboard::InputHandler::new();
-    let mut vis_plugin = VisLed::new(settings.visual, settings.brightness);
+    // let mut vis_plugin = VisLed::new(settings.visual, settings.brightness);
+    let mut vis_plugin = VisNull::new(settings.visual, settings.brightness);
 
     let all_vis: Vec<&Visualization> = GIFS.keys().collect();
     let mut current_vis_index: usize = 0;

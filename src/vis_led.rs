@@ -11,23 +11,25 @@ pub struct VisLed<'a> {
     last_frame: usize,
 }
 
-impl VisPlugin for VisLed<'_> {
-    fn new(visual: Visualization, brightness: u8) -> Self {
+impl<'a> VisPlugin for VisLed<'a> {
+    fn new(visual: Visualization, brightness: u8) -> VisLed<'a> {
+        let controller = ControllerBuilder::new()
+            .freq(800_000)
+            .dma(10)
+            .channel(
+                0, // Channel Index
+                ChannelBuilder::new()
+                    .pin(10) // GPIO 10 = SPI0 MOSI
+                    .count(64) // Number of LEDs
+                    .strip_type(StripType::Ws2812)
+                    .brightness(brightness) // default: 255
+                    .build(),
+            )
+            .build()
+            .unwrap();
+
         Self {
-            controller: ControllerBuilder::new()
-                .freq(800_000)
-                .dma(10)
-                .channel(
-                    0, // Channel Index
-                    ChannelBuilder::new()
-                        .pin(10) // GPIO 10 = SPI0 MOSI
-                        .count(64) // Number of LEDs
-                        .strip_type(StripType::Ws2812)
-                        .brightness(brightness) // default: 255
-                        .build(),
-                )
-                .build()
-                .unwrap(),
+            controller,
             gif: gifs::GIFS.get(&visual).unwrap(),
             last_frame: 0,
         }
