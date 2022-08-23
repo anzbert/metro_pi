@@ -28,16 +28,18 @@ fn main() {
 
     // PLUGINS
     let input_plugin = input_keyboard::InputHandler::new();
+
     // let mut vis_plugin = VisLed::new(settings.visual, settings.brightness);
     let mut vis_plugin = VisNull::new(settings.visual, settings.brightness);
 
+    // Init GIF Collection
     let all_vis: Vec<&Visualization> = GIFS.keys().collect();
     let mut current_vis_index: usize = 0;
 
-    // INIT SOUND
+    // Init Sound Device
     let audio_tx = audio::metro_audio_init();
 
-    // INIT LINK:
+    // Init Link
     let mut link = ableton_link::Link::new(settings.tempo);
     let clock = link.clock();
     link.enable(true);
