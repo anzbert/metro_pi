@@ -56,10 +56,10 @@ fn main() {
     'main: loop {
         // POLL INPUT
         if let Some(x) = input_plugin.poll() {
-            println!("received: {:?}", x);
-            current_vis_index = (current_vis_index + 1) % (all_vis.len() - 1);
+            // println!("received: {:?}", x);
+            // current_vis_index = (current_vis_index + 1) % (all_vis.len() - 1);
 
-            vis_plugin.select(**all_vis.get(current_vis_index).unwrap());
+            // vis_plugin.select(**all_vis.get(current_vis_index).unwrap());
         }
 
         // GET CURRENT SESSION STATE:

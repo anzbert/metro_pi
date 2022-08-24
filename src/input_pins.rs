@@ -10,12 +10,12 @@ impl InputPlugin for InputPins {
         let gpio = Gpio::new().unwrap();
 
         Self {
-            pin1: gpio.get(23).unwrap().into_input_pullup(),
+            pin1: gpio.get(27).unwrap().into_input_pullup(),
         }
     }
 
     fn poll(&self) -> Option<Input> {
-        println!("{}", self.pin1.read());
+        println!("{} : {}", self.pin1.pin(), self.pin1.read());
         Some(Input::default())
     }
 }
