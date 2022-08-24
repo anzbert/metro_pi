@@ -4,6 +4,7 @@ mod def_plugins;
 mod def_settings;
 mod gifs;
 mod input_keyboard;
+mod input_pins;
 mod utilities;
 mod vis_led;
 mod vis_null;
@@ -11,6 +12,7 @@ use crate::def_plugins::*;
 use def_settings::Settings;
 use gifs::Visualization;
 use gifs::GIFS;
+use input_pins::InputPins;
 use vis_led::VisLed;
 use vis_null::VisNull;
 
@@ -19,7 +21,7 @@ fn main() {
     let mut settings: Settings = Settings {
         visual: Visualization::default(),
         brightness: 3,
-        sound_enabled: true,
+        sound_enabled: false,
         volume: 100, // todo
         link_enabled: true,
         tempo: 120.0,
@@ -27,7 +29,8 @@ fn main() {
     };
 
     // PLUGINS
-    let input_plugin = input_keyboard::InputHandler::new();
+    // let input_plugin = input_keyboard::InputKeyboard::new();
+    let input_plugin = InputPins::new();
 
     // let mut vis_plugin = VisLed::new(settings.visual, settings.brightness);
     let mut vis_plugin = VisNull::new(settings.visual, settings.brightness);

@@ -1,25 +1,55 @@
 #!/bin/bash
 
-ARG=$1
-# IP=$2
-# REMOTE=pi@raspberrypi.local
+IP=$1
+COMP=$2
+RUN=$3
+PROFILE=''
 
-case $ARG in
-mkdir)
-    ssh -v pi@raspberrypi.local 'mkdir -p ~/build'
-    ;;
-debug)
-    scp -o LogLevel=VERBOSE target/debug/metro_pi pi@raspberrypi.local:~/build/
-    # rsync -p -v target/debug/metro_pi pi@raspberrypi.local:~/build/
-    ;;
-release)
-    scp -o LogLevel=VERBOSE target/release/metro_pi pi@raspberrypi.local:~/build/
-    ;;
-*)
+explain() {
+    echo "!!make sure both devices have cloned the repo to their home directory to create the folder structure!!"
+    echo "ARGUMENT 1:"
+    echo "target ip address"
 
-    echo "ARGUMENTS:"
-    echo "mkdir - creates build directory on pi"
+    echo "ARGUMENT 2:"
     echo "debug - copies debug version"
     echo "release - copies release version"
+
+    echo "ARGUMENT 3:"
+    echo "c - copy the script"
+    echo "r - run the script"
+    echo "cr - copy and run the script"
+
+    echo "Example:"
+    echo "sh scp 192.168.2.2 debug c"
+
+    exit 1
+}
+
+case $COMP in
+debug)
+    PROFILE=debug
+    ;;
+release)
+    PROFILE=release
+    ;;
+*)
+    explain
+    ;;
+esac
+
+case $RUN in
+
+r)
+    ssh pi@$IP "~/metro_pi/target/$PROFILE/metro_pi"
+    ;;
+c)
+    scp -o LogLevel=VERBOSE target/$PROFILE/metro_pi pi@$IP:~/metro_pi/target/$PROFILE/
+    ;;
+cr)
+    scp -o LogLevel=VERBOSE target/$PROFILE/metro_pi pi@$IP:~/metro_pi/target/$PROFILE/
+    ssh pi@$IP "~/metro_pi/target/$PROFILE/metro_pi"
+    ;;
+*)
+    explain
     ;;
 esac

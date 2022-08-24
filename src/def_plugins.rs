@@ -23,6 +23,16 @@ impl Input {
     }
 }
 
+impl Default for Input {
+    fn default() -> Self {
+        Self {
+            left: false,
+            right: false,
+            button: false,
+        }
+    }
+}
+
 // VIS
 pub trait VisPlugin {
     fn new(visual: Visualization, brightness: u8) -> Self;

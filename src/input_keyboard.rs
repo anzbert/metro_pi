@@ -3,12 +3,12 @@ use std::io::stdin;
 use std::sync::mpsc::{Receiver, Sender};
 use std::thread;
 
-pub struct InputHandler {
+pub struct InputKeyboard {
     poll_tx: Sender<String>,
     poll_rx: Receiver<Option<String>>,
 }
 
-impl InputPlugin for InputHandler {
+impl InputPlugin for InputKeyboard {
     fn new() -> Self {
         let (poll_tx, other_thread_rx): (Sender<String>, Receiver<String>) =
             std::sync::mpsc::channel();
@@ -36,7 +36,7 @@ impl InputPlugin for InputHandler {
             }
         });
 
-        InputHandler { poll_tx, poll_rx }
+        InputKeyboard { poll_tx, poll_rx }
     }
 
     fn poll(&self) -> Option<Input> {
