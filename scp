@@ -3,10 +3,11 @@
 IP=$1
 COMP=$2
 RUN=$3
+BUILD=$4
 PROFILE=''
 
 explain() {
-    echo "!!make sure both devices have cloned the repo to their home directory to create the folder structure!!"
+    echo "!!make sure both devices have cloned the repo to their home directory to create the folder structure with assets!!"
     echo "ARGUMENT 1:"
     echo "target ip address"
 
@@ -18,6 +19,9 @@ explain() {
     echo "c - copy the script"
     echo "r - run the script"
     echo "cr - copy and run the script"
+
+    echo "(optional )ARGUMENT 4:"
+    echo "build - build before copying"
 
     echo "Example:"
     echo "sh scp 192.168.2.2 debug c"
@@ -34,6 +38,19 @@ release)
     ;;
 *)
     explain
+    ;;
+esac
+
+case $BUILD in
+build)
+    case $COMP in
+    debug)
+        cargo build
+        ;;
+    release)
+        cargo build --release
+        ;;
+    esac
     ;;
 esac
 

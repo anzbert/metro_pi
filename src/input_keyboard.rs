@@ -39,7 +39,7 @@ impl InputPlugin for InputKeyboard {
         InputKeyboard { poll_tx, poll_rx }
     }
 
-    fn poll(&self) -> Option<Input> {
+    fn poll(&mut self) -> Option<Input> {
         self.poll_tx.send("poll".to_string()).unwrap();
 
         match self.poll_rx.try_recv() {

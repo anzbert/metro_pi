@@ -3,10 +3,10 @@ use crate::gifs::Visualization;
 // INPUT
 pub trait InputPlugin {
     fn new() -> Self;
-    fn poll(&self) -> Option<Input>;
+    fn poll(&mut self) -> Option<Input>;
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub struct Input {
     pub left: bool,
     pub right: bool,

@@ -4,6 +4,7 @@ mod def_plugins;
 mod def_settings;
 mod gifs;
 mod input_keyboard;
+mod input_null;
 mod input_pins;
 mod utilities;
 mod vis_led;
@@ -30,7 +31,7 @@ fn main() {
 
     // PLUGINS
     // let input_plugin = input_keyboard::InputKeyboard::new();
-    let input_plugin = InputPins::new();
+    let mut input_plugin = InputPins::new();
 
     // let mut vis_plugin = VisLed::new(settings.visual, settings.brightness);
     let mut vis_plugin = VisNull::new(settings.visual, settings.brightness);
