@@ -9,9 +9,8 @@ mod input_null;
 #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
 mod input_pins;
 mod utilities;
-mod vis_cons;
 #[cfg(any(target_os = "macos", target_os = "windows"))]
-// mod vis_console;
+mod vis_cons;
 #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
 mod vis_led;
 mod vis_null;

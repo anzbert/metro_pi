@@ -18,6 +18,12 @@ pub struct VisCons<'a> {
 
 impl<'a> VisPlugin for VisCons<'a> {
     fn new(visual: Visualization, _brightness: u8) -> VisCons<'a> {
+        let mut stdout = stdout();
+        stdout
+            .queue(terminal::Clear(terminal::ClearType::All))
+            .unwrap();
+        stdout.flush().unwrap();
+
         Self {
             gif: gifs::GIFS.get(&visual).unwrap(),
             last_frame: 0,
@@ -35,7 +41,9 @@ impl<'a> VisPlugin for VisCons<'a> {
             let mut stdout = stdout();
 
             stdout
-                .queue(terminal::Clear(terminal::ClearType::All))
+                .queue(cursor::MoveToRow(GRID_HEIGHT as u16))
+                .unwrap()
+                .queue(terminal::Clear(terminal::ClearType::FromCursorUp))
                 .unwrap()
                 .queue(cursor::Hide)
                 .unwrap();
@@ -44,9 +52,10 @@ impl<'a> VisPlugin for VisCons<'a> {
                 let pixel_color: &(u8, u8, u8, u8) =
                     self.gif.frames[current_frame].pixels.get(i).unwrap();
 
-                let x = i % (GRID_WIDTH) + 1;
+                let x = (i % (GRID_WIDTH) + 1) * 2;
                 let y = i / (GRID_HEIGHT) + 1;
 
+                // Using ansi colors for compatibility with macos terminal, which doesnt support full RGB
                 let ansi_color = style::Color::AnsiValue(
                     coolor::Rgb::new(pixel_color.0, pixel_color.1, pixel_color.2)
                         .to_ansi()
@@ -54,12 +63,16 @@ impl<'a> VisPlugin for VisCons<'a> {
                 );
 
                 stdout
-                    .queue(cursor::MoveTo(x as u16 * 2, y as u16))
+                    .queue(cursor::MoveTo(x as u16, y as u16))
                     .unwrap()
                     .queue(style::PrintStyledContent("⬤".with(ansi_color)))
                     .unwrap();
             }
-            stdout.flush().unwrap();
+            stdout
+                .queue(cursor::MoveToNextLine(1))
+                .unwrap()
+                .flush()
+                .unwrap();
 
             self.last_frame = current_frame;
         }

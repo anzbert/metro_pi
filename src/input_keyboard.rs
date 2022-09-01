@@ -48,8 +48,12 @@ impl InputPlugin for InputKeyboard {
                     "r" => Some(Input::new(false, true, false)),
                     "l" => Some(Input::new(true, false, false)),
                     "b" => Some(Input::new(false, false, true)),
+                    "q" => {
+                        println!("Exiting...");
+                        std::process::exit(0);
+                    }
                     _ => {
-                        println!("--> Only acceptable input is 'l', 'r', or 'b'");
+                        println!("--> Only acceptable input is 'l', 'r', 'b' or 'q' to quit");
                         None
                     }
                 },
