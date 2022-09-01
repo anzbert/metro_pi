@@ -18,4 +18,5 @@ rppal = "^0.13.1"
 rs_ws281x = { git = "https://github.com/rpi-ws281x/rpi-ws281x-rust" }
 
 [target.'cfg(any(target_os = "macos", target_os = "windows"))'.dependencies]
-termion = "*"
+crossterm = "*"
+# termion = "*"

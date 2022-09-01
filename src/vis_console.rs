@@ -48,6 +48,7 @@ impl<'a> VisPlugin for VisConsole<'a> {
                     "⬤"
                 );
             }
+            self.last_frame = current_frame;
         }
     }
 

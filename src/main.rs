@@ -9,8 +9,9 @@ mod input_null;
 #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
 mod input_pins;
 mod utilities;
+mod vis_cons;
 #[cfg(any(target_os = "macos", target_os = "windows"))]
-mod vis_console;
+// mod vis_console;
 #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
 mod vis_led;
 mod vis_null;
@@ -51,7 +52,7 @@ fn main() {
     let mut vis_plugin = vis_led::VisLed::new(settings.visual, settings.brightness);
 
     #[cfg(any(target_os = "macos", target_os = "windows"))]
-    let mut vis_plugin = vis_console::VisConsole::new(settings.visual, settings.brightness);
+    let mut vis_plugin = vis_cons::VisCons::new(settings.visual, settings.brightness);
 
     ////////////////////////////////////////////////////////////////////
 
