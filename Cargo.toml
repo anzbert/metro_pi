@@ -11,5 +11,10 @@ lazy_static = "1.4.0"
 rand = "*"
 rgb = "^0.8.33"
 rodio = "0.15.0"
+
+# Raspberry Pi only:
+[target.'cfg(all(target_arch = "arm", target_os="linux", target_env="gnu"))'.dependencies]
 rppal = "^0.13.1"
 rs_ws281x = { git = "https://github.com/rpi-ws281x/rpi-ws281x-rust" }
+
+[target.'cfg(target_os="macos")'.dependencies]

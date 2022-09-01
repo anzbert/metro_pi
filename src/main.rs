@@ -3,10 +3,13 @@ mod def_const;
 mod def_plugins;
 mod def_settings;
 mod gifs;
+#[cfg(any(target_os = "macos", target_os = "windows"))]
 mod input_keyboard;
 mod input_null;
+#[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
 mod input_pins;
 mod utilities;
+#[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
 mod vis_led;
 mod vis_null;
 use core::time;
@@ -16,8 +19,7 @@ use crate::def_plugins::*;
 use def_settings::Settings;
 use gifs::Visualization;
 use gifs::GIFS;
-use input_pins::InputPins;
-use vis_led::VisLed;
+
 use vis_null::VisNull;
 
 fn main() {
@@ -33,10 +35,16 @@ fn main() {
     };
 
     // PLUGINS
+    #[cfg(any(target_os = "macos", target_os = "windows"))]
     let mut input_plugin = input_keyboard::InputKeyboard::new();
-    // let mut input_plugin = InputPins::new();
 
-    // let mut vis_plugin = VisLed::new(settings.visual, settings.brightness);
+    #[cfg(target_os = "unix")]
+    let mut input_plugin = input_pins::InputPins::new();
+
+    #[cfg(target_os = "unix")]
+    let mut vis_plugin = vis_led::VisLed::new(settings.visual, settings.brightness);
+
+    #[cfg(any(target_os = "macos", target_os = "windows"))]
     let mut vis_plugin = VisNull::new(settings.visual, settings.brightness);
 
     // Init GIF Collection
