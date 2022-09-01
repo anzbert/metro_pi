@@ -4,11 +4,10 @@ use crate::{
     gifs::{self, RgbaImageData, Visualization},
 };
 
-// use termion::{clear, color, cursor};
 use crossterm::{
     cursor,
     style::{self, Stylize},
-    terminal, ExecutableCommand, QueueableCommand, Result,
+    terminal, QueueableCommand,
 };
 use std::io::{stdout, Write};
 
@@ -44,27 +43,20 @@ impl<'a> VisPlugin for VisCons<'a> {
             for i in 0..(GRID_HEIGHT * GRID_WIDTH) {
                 let pixel_color: &(u8, u8, u8, u8) =
                     self.gif.frames[current_frame].pixels.get(i).unwrap();
-                // let termion_color =
-                //     termion::color::Rgb(pixel_color.0, pixel_color.1, pixel_color.2);
-                // let termion_color = termion::color::AnsiValue::rgb(
-                //     pixel_color.0 / 51,
-                //     pixel_color.1 / 51,
-                //     pixel_color.2 / 51,
-                // );
 
                 let x = i % (GRID_WIDTH) + 1;
                 let y = i / (GRID_HEIGHT) + 1;
 
+                let ansi_color = style::Color::AnsiValue(
+                    coolor::Rgb::new(pixel_color.0, pixel_color.1, pixel_color.2)
+                        .to_ansi()
+                        .code,
+                );
+
                 stdout
-                    .queue(style::SetForegroundColor(style::Color::Rgb {
-                        r: pixel_color.0,
-                        g: pixel_color.1,
-                        b: pixel_color.2,
-                    }))
-                    .unwrap()
                     .queue(cursor::MoveTo(x as u16 * 2, y as u16))
                     .unwrap()
-                    .queue(style::PrintStyledContent("⬤".stylize()))
+                    .queue(style::PrintStyledContent("⬤".with(ansi_color)))
                     .unwrap();
             }
             stdout.flush().unwrap();

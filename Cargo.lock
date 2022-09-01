@@ -227,6 +227,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "coolor"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "af4d7a805ca0d92f8c61a31c809d4323fdaa939b0b440e544d21db7797c5aaad"
+
+[[package]]
 name = "core-foundation-sys"
 version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -704,6 +710,7 @@ name = "metro_pi"
 version = "0.1.0"
 dependencies = [
  "ableton-link",
+ "coolor",
  "crossterm",
  "image",
  "lazy_static",
