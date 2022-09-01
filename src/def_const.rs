@@ -1,4 +1,6 @@
+#[allow(dead_code)]
 pub const GRID_HEIGHT: usize = 8;
+#[allow(dead_code)]
 pub const GRID_WIDTH: usize = 8;
 
 #[allow(unused_allocation)]

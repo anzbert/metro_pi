@@ -21,7 +21,7 @@ pub enum VisType {
 
 impl Default for Visualization {
     fn default() -> Self {
-        Self::Rows(VisType::Gif)
+        Self::Circular(VisType::Gif)
     }
 }
 

@@ -9,32 +9,38 @@ mod input_null;
 #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
 mod input_pins;
 mod utilities;
+#[cfg(any(target_os = "macos", target_os = "windows"))]
+mod vis_console;
 #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
 mod vis_led;
 mod vis_null;
 use core::time;
-use std::thread;
-
-use crate::def_plugins::*;
+use def_plugins::*;
 use def_settings::Settings;
 use gifs::Visualization;
 use gifs::GIFS;
-
-use vis_null::VisNull;
+use std::thread;
 
 fn main() {
     // SETTINGS
     let mut settings: Settings = Settings {
         visual: Visualization::default(),
         brightness: 3,
-        sound_enabled: false,
+        sound_enabled: true,
         volume: 100, // todo
         link_enabled: true,
         tempo: 120.0,
         quantum: 4.0,
     };
 
+    ////////////////////////////////////////////////////////////////////
+
     // PLUGINS
+    #[allow(unused_variables, unused_mut)]
+    let mut vis_plugin = vis_null::VisNull::new(settings.visual, settings.brightness);
+    #[allow(unused_variables, unused_mut)]
+    let mut input_plugin = input_null::InputNull::new();
+
     #[cfg(any(target_os = "macos", target_os = "windows"))]
     let mut input_plugin = input_keyboard::InputKeyboard::new();
 
@@ -45,9 +51,11 @@ fn main() {
     let mut vis_plugin = vis_led::VisLed::new(settings.visual, settings.brightness);
 
     #[cfg(any(target_os = "macos", target_os = "windows"))]
-    let mut vis_plugin = VisNull::new(settings.visual, settings.brightness);
+    let mut vis_plugin = vis_console::VisConsole::new(settings.visual, settings.brightness);
 
-    // Init GIF Collection
+    ////////////////////////////////////////////////////////////////////
+
+    // INIT GIFS
     let all_vis: Vec<&Visualization> = GIFS.keys().collect();
     let mut current_vis_index: usize = 0;
 
@@ -67,13 +75,13 @@ fn main() {
     #[allow(unused_labels)]
     'main: loop {
         // THREAD SLEEP (to save cpu usage)
-        thread::sleep(time::Duration::from_millis(8));
+        thread::sleep(time::Duration::from_millis(5));
 
         // POLL INPUT
         if let Some(x) = input_plugin.poll() {
-            // println!("received: {:?}", x);
-            // current_vis_index = (current_vis_index + 1) % (all_vis.len() - 1);
+            println!("Received: {:?}", x);
 
+            // current_vis_index = (current_vis_index + 1) % (all_vis.len() - 1);
             // vis_plugin.select(**all_vis.get(current_vis_index).unwrap());
         }
 
