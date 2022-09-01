@@ -9,6 +9,9 @@ mod input_pins;
 mod utilities;
 mod vis_led;
 mod vis_null;
+use core::time;
+use std::thread;
+
 use crate::def_plugins::*;
 use def_settings::Settings;
 use gifs::Visualization;
@@ -30,8 +33,8 @@ fn main() {
     };
 
     // PLUGINS
-    // let input_plugin = input_keyboard::InputKeyboard::new();
-    let mut input_plugin = InputPins::new();
+    let mut input_plugin = input_keyboard::InputKeyboard::new();
+    // let mut input_plugin = InputPins::new();
 
     // let mut vis_plugin = VisLed::new(settings.visual, settings.brightness);
     let mut vis_plugin = VisNull::new(settings.visual, settings.brightness);
@@ -55,6 +58,9 @@ fn main() {
     // ---------------------------------------------------------------------------- //
     #[allow(unused_labels)]
     'main: loop {
+        // THREAD SLEEP (to save cpu usage)
+        thread::sleep(time::Duration::from_millis(8));
+
         // POLL INPUT
         if let Some(x) = input_plugin.poll() {
             // println!("received: {:?}", x);
