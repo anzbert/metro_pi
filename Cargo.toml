@@ -12,9 +12,9 @@ rand = "*"
 rgb = "^0.8.33"
 rodio = "0.15.0"
 
-# Raspberry Pi only:
-[target.'cfg(all(target_arch = "arm", target_os="linux", target_env="gnu"))'.dependencies]
+# 64-bit Raspberry Pi only:
+[target.'cfg(all(target_arch = "aarch64", target_os = "linux"))'.dependencies]
 rppal = "^0.13.1"
 rs_ws281x = { git = "https://github.com/rpi-ws281x/rpi-ws281x-rust" }
 
-[target.'cfg(target_os="macos")'.dependencies]
+[target.'cfg(any(target_os = "macos", target_os = "windows"))'.dependencies]

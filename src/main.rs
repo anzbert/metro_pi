@@ -6,10 +6,10 @@ mod gifs;
 #[cfg(any(target_os = "macos", target_os = "windows"))]
 mod input_keyboard;
 mod input_null;
-#[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
+#[cfg(all(target_arch = "aarch64", target_os = "linux"))]
 mod input_pins;
 mod utilities;
-#[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
+#[cfg(all(target_arch = "aarch64", target_os = "linux"))]
 mod vis_led;
 mod vis_null;
 use core::time;
@@ -38,10 +38,10 @@ fn main() {
     #[cfg(any(target_os = "macos", target_os = "windows"))]
     let mut input_plugin = input_keyboard::InputKeyboard::new();
 
-    #[cfg(target_os = "unix")]
+    #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
     let mut input_plugin = input_pins::InputPins::new();
 
-    #[cfg(target_os = "unix")]
+    #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
     let mut vis_plugin = vis_led::VisLed::new(settings.visual, settings.brightness);
 
     #[cfg(any(target_os = "macos", target_os = "windows"))]
