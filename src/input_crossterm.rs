@@ -1,8 +1,8 @@
 use crate::def_plugins::*;
 use crossterm::event::{read, Event, KeyCode};
-use crossterm::terminal::{self, Clear};
-use crossterm::{cursor, ExecutableCommand};
-use std::io::{stdout, Write};
+use crossterm::terminal::{self};
+use crossterm::ExecutableCommand;
+
 use std::sync::mpsc::{Receiver, Sender};
 use std::thread::{self};
 pub struct InputCrossterm {
@@ -21,13 +21,13 @@ impl InputPlugin for InputCrossterm {
         thread::spawn(move || {
             crossterm::terminal::enable_raw_mode().unwrap();
 
-            let mut lastPressed: Option<KeyCode> = None;
+            let mut last_pressed: Option<KeyCode> = None;
 
             for message in other_thread_rx {
                 match read().unwrap() {
                     Event::Key(event) => match event.code {
                         KeyCode::Char('q') => std::process::exit(0),
-                        _ => lastPressed = Some(event.code),
+                        _ => last_pressed = Some(event.code),
                     },
                     Event::Resize(_width, _height) => {
                         let mut stdout = std::io::stdout();
@@ -39,9 +39,9 @@ impl InputPlugin for InputCrossterm {
                 };
                 match message {
                     _ => {
-                        if lastPressed != None {
-                            other_thread_tx.send(lastPressed).unwrap();
-                            lastPressed = None;
+                        if last_pressed != None {
+                            other_thread_tx.send(last_pressed).unwrap();
+                            last_pressed = None;
                         }
                     }
                 };

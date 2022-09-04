@@ -5,6 +5,8 @@ use std::collections::HashMap;
 use std::error::Error;
 use std::result::Result;
 
+struct AllVis {}
+
 #[derive(Eq, PartialEq, Hash, Clone, Copy)]
 pub enum Visualization {
     Rows(VisType),
