@@ -1,13 +1,13 @@
 use crate::def_plugins::{Input, InputPlugin};
 use rppal::gpio::{Gpio, InputPin, Level};
 
-pub struct InputPins {
+pub struct InputHardware {
     pin1: InputPin,
     pin1_stored_state: Level,
     input_state: Input,
 }
 
-impl InputPlugin for InputPins {
+impl InputPlugin for InputHardware {
     fn new() -> Self {
         let gpio = Gpio::new().unwrap();
 

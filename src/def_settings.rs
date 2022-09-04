@@ -6,7 +6,6 @@ pub struct Settings {
     pub tempo: f64,
     pub quantum: f64,
     pub link_enabled: bool,
-    pub sound_enabled: bool,
     pub volume: u8,
     pub brightness: u8,
 }

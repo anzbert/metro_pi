@@ -1,13 +1,14 @@
 mod audio;
 mod def_const;
+mod def_input;
 mod def_plugins;
 mod def_settings;
 mod gifs;
 #[cfg(any(target_os = "macos", target_os = "windows"))]
 mod input_crossterm;
-mod input_null;
 #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
-mod input_pins;
+mod input_hardware;
+mod input_null;
 mod utilities;
 #[cfg(any(target_os = "macos", target_os = "windows"))]
 mod vis_crossterm;
@@ -26,7 +27,6 @@ fn main() {
     let mut settings: Settings = Settings {
         visual: Visualization::default(),
         brightness: 3,
-        sound_enabled: true,
         volume: 100, // todo
         link_enabled: true,
         tempo: 120.0,
@@ -45,7 +45,7 @@ fn main() {
     let mut input_plugin = input_crossterm::InputCrossterm::new();
 
     #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
-    let mut input_plugin = input_pins::InputPins::new();
+    let mut input_plugin = input_pins::InputHardware::new();
 
     #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
     let mut vis_plugin = vis_led::VisLed::new(settings.visual, settings.brightness);
@@ -81,16 +81,21 @@ fn main() {
         if let Some(input) = input_plugin.poll() {
             // println!("Debug Received: {:?}", x);
 
-            if input.left {
-                current_vis_index = match current_vis_index.checked_sub(1) {
-                    Some(x) => x,
-                    None => all_vis.len() - 1,
-                };
-                vis_plugin.select(**all_vis.get(current_vis_index).unwrap());
-            }
-            if input.right {
-                current_vis_index = (current_vis_index + 1) % all_vis.len();
-                vis_plugin.select(**all_vis.get(current_vis_index).unwrap());
+            match input {
+                def_input::Input::Left => {
+                    current_vis_index = match current_vis_index.checked_sub(1) {
+                        Some(x) => x,
+                        None => all_vis.len() - 1,
+                    };
+                    vis_plugin.select(**all_vis.get(current_vis_index).unwrap());
+                }
+                def_input::Input::Right => {
+                    current_vis_index = (current_vis_index + 1) % all_vis.len();
+                    vis_plugin.select(**all_vis.get(current_vis_index).unwrap());
+                }
+                def_input::Input::Button => (),
+                def_input::Input::Volume(_) => (),
+                _ => (),
             }
         }
 
@@ -121,7 +126,7 @@ fn main() {
                 last_beat = beat.floor(); // zero to last full beat
 
                 // TRIGGER SOUND:
-                if settings.sound_enabled {
+                if settings.volume > 0 {
                     match phase.floor() as u32 {
                         0 => audio_tx.send(1).unwrap(), // on the first beat
                         _ => audio_tx.send(0).unwrap(), // on any other beat

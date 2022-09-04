@@ -1,3 +1,4 @@
+use crate::def_input::Input;
 use crate::def_plugins::*;
 use crossterm::event::{read, Event, KeyCode};
 use crossterm::terminal::{self};
@@ -56,15 +57,17 @@ impl InputPlugin for InputCrossterm {
 
         match self.poll_rx.try_recv() {
             Ok(x) => match x {
-                Some(x) => match x {
-                    KeyCode::Right => Some(Input::new(false, true, false)),
-                    KeyCode::Left => Some(Input::new(true, false, false)),
-                    KeyCode::Char(' ') => Some(Input::new(false, false, true)),
-                    _ => {
-                        // println!("--> Only acceptable input is 'left arrow', 'right arrow', 'space' or 'q' to quit");
-                        None
+                Some(x) => {
+                    match x {
+                        KeyCode::Right => Some(Input::Right),
+                        KeyCode::Left => Some(Input::Left),
+                        KeyCode::Char(' ') => Some(Input::Button),
+                        _ => {
+                            // println!("--> Only acceptable input is 'left arrow', 'right arrow', 'space' or 'q' to quit");
+                            None
+                        }
                     }
-                },
+                }
                 None => None,
             },
             Err(_) => None,

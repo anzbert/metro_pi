@@ -1,4 +1,4 @@
-use crate::def_plugins::{Input, InputPlugin};
+use crate::{def_input::Input, def_plugins::InputPlugin};
 
 pub struct InputNull {}
 impl InputPlugin for InputNull {
