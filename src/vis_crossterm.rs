@@ -3,7 +3,6 @@ use crate::{
     def_plugins::VisPlugin,
     gifs::{self, RgbaImageData, Visualization},
 };
-
 use crossterm::{
     cursor,
     style::{self, Stylize},
@@ -11,13 +10,13 @@ use crossterm::{
 };
 use std::io::{stdout, Write};
 
-pub struct VisCons<'a> {
+pub struct VisCrossterm<'a> {
     gif: &'a RgbaImageData,
     last_frame: usize,
 }
 
-impl<'a> VisPlugin for VisCons<'a> {
-    fn new(visual: Visualization, _brightness: u8) -> VisCons<'a> {
+impl<'a> VisPlugin for VisCrossterm<'a> {
+    fn new(visual: Visualization, _brightness: u8) -> VisCrossterm<'a> {
         let mut stdout = stdout();
         stdout
             .queue(terminal::Clear(terminal::ClearType::All))
@@ -69,7 +68,11 @@ impl<'a> VisPlugin for VisCons<'a> {
                     .unwrap();
             }
             stdout
-                .queue(cursor::MoveToNextLine(1))
+                .queue(cursor::MoveToNextLine(2))
+                .unwrap()
+                .queue(style::Print(INFO))
+                .unwrap()
+                .queue(cursor::MoveToNextLine(2))
                 .unwrap()
                 .flush()
                 .unwrap();
@@ -84,3 +87,5 @@ impl<'a> VisPlugin for VisCons<'a> {
 
     fn set_brightness(&mut self, _value: u8) {}
 }
+
+pub const INFO: &str = "Press <- / -> / Space or 'q' to exit";

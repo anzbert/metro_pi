@@ -4,13 +4,13 @@ mod def_plugins;
 mod def_settings;
 mod gifs;
 #[cfg(any(target_os = "macos", target_os = "windows"))]
-mod input_keyboard;
+mod input_crossterm;
 mod input_null;
 #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
 mod input_pins;
 mod utilities;
 #[cfg(any(target_os = "macos", target_os = "windows"))]
-mod vis_cons;
+mod vis_crossterm;
 #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
 mod vis_led;
 mod vis_null;
@@ -42,7 +42,7 @@ fn main() {
     let mut input_plugin = input_null::InputNull::new();
 
     #[cfg(any(target_os = "macos", target_os = "windows"))]
-    let mut input_plugin = input_keyboard::InputKeyboard::new();
+    let mut input_plugin = input_crossterm::InputCrossterm::new();
 
     #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
     let mut input_plugin = input_pins::InputPins::new();
@@ -51,7 +51,7 @@ fn main() {
     let mut vis_plugin = vis_led::VisLed::new(settings.visual, settings.brightness);
 
     #[cfg(any(target_os = "macos", target_os = "windows"))]
-    let mut vis_plugin = vis_cons::VisCons::new(settings.visual, settings.brightness);
+    let mut vis_plugin = vis_crossterm::VisCrossterm::new(settings.visual, settings.brightness);
 
     ////////////////////////////////////////////////////////////////////
 
