@@ -28,8 +28,8 @@ impl InputPlugin for InputHardware {
         } else {
             self.pin1_stored_state = updated_state;
             self.input_state.button = match updated_state {
-                Level::Low => true,
-                Level::High => false,
+                Level::Low => Input::Button,
+                Level::High => None,
             };
             Some(self.input_state)
         }

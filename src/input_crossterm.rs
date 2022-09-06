@@ -36,6 +36,7 @@ impl InputPlugin for InputCrossterm {
                             .execute(terminal::Clear(terminal::ClearType::All))
                             .unwrap();
                     }
+                    // Event::Mouse(MouseEventKind::ScrollUp) => (),
                     _ => (),
                 };
                 match message {

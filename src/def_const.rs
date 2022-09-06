@@ -3,8 +3,10 @@ pub const GRID_HEIGHT: usize = 8;
 #[allow(dead_code)]
 pub const GRID_WIDTH: usize = 8;
 
+pub const GRID_LENGTH: usize = GRID_HEIGHT * GRID_WIDTH;
+
 #[allow(unused_allocation)]
-pub const _CLOCK: [(usize, usize); 28] = [
+pub const RING: [(usize, usize); 28] = [
     (0, 0),
     (1, 0),
     (2, 0),

@@ -1,7 +1,7 @@
 use crate::{
     def_const::{GRID_HEIGHT, GRID_WIDTH},
     def_plugins::VisPlugin,
-    gifs::{self, RgbaImageData, Visualization},
+    gifs::RgbAnimation,
 };
 use crossterm::{
     cursor,
@@ -10,13 +10,13 @@ use crossterm::{
 };
 use std::io::{stdout, Write};
 
-pub struct VisCrossterm<'a> {
-    gif: &'a RgbaImageData,
+pub struct VisCrossterm {
+    animation: &'static RgbAnimation,
     last_frame: usize,
 }
 
-impl<'a> VisPlugin for VisCrossterm<'a> {
-    fn new(visual: Visualization, _brightness: u8) -> VisCrossterm<'a> {
+impl VisPlugin for VisCrossterm {
+    fn new(animation: &'static RgbAnimation, _brightness: u8) -> VisCrossterm {
         let mut stdout = stdout();
         stdout
             .queue(terminal::Clear(terminal::ClearType::All))
@@ -24,13 +24,13 @@ impl<'a> VisPlugin for VisCrossterm<'a> {
         stdout.flush().unwrap();
 
         Self {
-            gif: gifs::GIFS.get(&visual).unwrap(),
+            animation,
             last_frame: 0,
         }
     }
 
     fn update(&mut self, quantum: f64, phase: f64) {
-        let number_of_frames_in_animation = self.gif.frames.len();
+        let number_of_frames_in_animation = self.animation.frames.len();
         let bar_percentage = phase / quantum;
         let current_frame: usize =
             (number_of_frames_in_animation as f64 * bar_percentage).floor() as usize;
@@ -48,8 +48,8 @@ impl<'a> VisPlugin for VisCrossterm<'a> {
                 .unwrap();
 
             for i in 0..(GRID_HEIGHT * GRID_WIDTH) {
-                let pixel_color: &(u8, u8, u8, u8) =
-                    self.gif.frames[current_frame].pixels.get(i).unwrap();
+                let pixel_color: &(u8, u8, u8) =
+                    &self.animation.frames[current_frame].get(i).unwrap();
 
                 let x = (i % (GRID_WIDTH) + 1) * 2;
                 let y = i / (GRID_HEIGHT) + 1;
@@ -81,8 +81,8 @@ impl<'a> VisPlugin for VisCrossterm<'a> {
         }
     }
 
-    fn select(&mut self, visual: Visualization) {
-        self.gif = gifs::GIFS.get(&visual).unwrap();
+    fn select(&mut self, animation: &'static RgbAnimation) {
+        self.animation = animation;
     }
 
     fn set_brightness(&mut self, _value: u8) {}

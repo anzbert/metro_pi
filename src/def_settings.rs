@@ -1,8 +1,7 @@
-use crate::gifs::Visualization;
+use crate::gifs::RgbAnimation;
 
-#[derive(PartialEq)]
 pub struct Settings {
-    pub visual: Visualization,
+    pub visual: &'static RgbAnimation,
     pub tempo: f64,
     pub quantum: f64,
     pub link_enabled: bool,

@@ -18,14 +18,13 @@ mod vis_null;
 use core::time;
 use def_plugins::*;
 use def_settings::Settings;
-use gifs::Visualization;
-use gifs::GIFS;
+use gifs::ANIMATIONS;
 use std::thread;
 
 fn main() {
     // SETTINGS
     let mut settings: Settings = Settings {
-        visual: Visualization::default(),
+        visual: ANIMATIONS.get(0).unwrap(),
         brightness: 3,
         volume: 100, // todo
         link_enabled: true,
@@ -36,10 +35,10 @@ fn main() {
     ////////////////////////////////////////////////////////////////////
 
     // PLUGINS
-    #[allow(unused_variables, unused_mut)]
-    let mut vis_plugin = vis_null::VisNull::new(settings.visual, settings.brightness);
-    #[allow(unused_variables, unused_mut)]
-    let mut input_plugin = input_null::InputNull::new();
+    // #[allow(unused_variables, unused_mut)]
+    // let mut vis_plugin = vis_null::VisNull::new(settings.visual, settings.brightness);
+    // #[allow(unused_variables, unused_mut)]
+    // let mut input_plugin = input_null::InputNull::new();
 
     #[cfg(any(target_os = "macos", target_os = "windows"))]
     let mut input_plugin = input_crossterm::InputCrossterm::new();
@@ -56,7 +55,6 @@ fn main() {
     ////////////////////////////////////////////////////////////////////
 
     // INIT GIFS
-    let all_vis: Vec<&Visualization> = GIFS.keys().collect();
     let mut current_vis_index: usize = 0;
 
     // Init Sound Device
@@ -85,13 +83,13 @@ fn main() {
                 def_input::Input::Left => {
                     current_vis_index = match current_vis_index.checked_sub(1) {
                         Some(x) => x,
-                        None => all_vis.len() - 1,
+                        None => ANIMATIONS.len() - 1,
                     };
-                    vis_plugin.select(**all_vis.get(current_vis_index).unwrap());
+                    vis_plugin.select(ANIMATIONS.get(current_vis_index).unwrap());
                 }
                 def_input::Input::Right => {
-                    current_vis_index = (current_vis_index + 1) % all_vis.len();
-                    vis_plugin.select(**all_vis.get(current_vis_index).unwrap());
+                    current_vis_index = (current_vis_index + 1) % ANIMATIONS.len();
+                    vis_plugin.select(ANIMATIONS.get(current_vis_index).unwrap());
                 }
                 def_input::Input::Button => (),
                 def_input::Input::Volume(_) => (),
