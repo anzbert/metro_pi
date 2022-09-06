@@ -80,7 +80,7 @@ fn main() {
     #[allow(unused_labels)]
     'main: loop {
         // THREAD SLEEP (to save cpu usage)
-        thread::sleep(time::Duration::from_millis(5));
+        spin_sleep::sleep(time::Duration::from_millis(5));
 
         // POLL INPUT
         if let Some(input) = input_plugin.poll() {
