@@ -1,4 +1,4 @@
-use crate::{def_plugins::VisPlugin, gifs::RgbAnimation};
+use crate::{animations::RgbAnimation, def_plugins::VisPlugin};
 
 pub struct VisNull {}
 

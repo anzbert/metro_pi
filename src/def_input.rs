@@ -4,5 +4,5 @@ pub enum Input {
     Up,
     Down,
     Button,
-    Volume(u8),
+    Volume(f32),
 }

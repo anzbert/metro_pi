@@ -5,6 +5,12 @@ pub const GRID_WIDTH: usize = 8;
 
 pub const GRID_LENGTH: usize = GRID_HEIGHT * GRID_WIDTH;
 
+pub const SOUND_PATHS: [&str; 3] = [
+    "snd/met_mech.wav",
+    "snd/met_elec.wav",
+    "snd/examples_music.wav",
+];
+
 #[allow(unused_allocation)]
 pub const RING: [(usize, usize); 28] = [
     (0, 0),

@@ -1,7 +1,7 @@
 use crate::{
+    animations::RgbAnimation,
     def_const::{GRID_HEIGHT, GRID_WIDTH},
     def_plugins::VisPlugin,
-    gifs::RgbAnimation,
 };
 use crossterm::{
     cursor,
@@ -88,4 +88,4 @@ impl VisPlugin for VisCrossterm {
     fn set_brightness(&mut self, _value: u8) {}
 }
 
-pub const INFO: &str = "Press <- / -> / Space or 'q' to exit";
+pub const INFO: &str = "Press <- / -> / Space / Vol: 0-9 / or 'q' to exit ";

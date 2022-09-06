@@ -1,4 +1,4 @@
-use crate::{def_input::Input, gifs::RgbAnimation};
+use crate::{animations::RgbAnimation, def_input::Input};
 pub trait InputPlugin {
     fn new() -> Self;
     fn poll(&mut self) -> Option<Input>;

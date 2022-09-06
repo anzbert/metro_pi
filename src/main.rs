@@ -1,9 +1,9 @@
+mod animations;
 mod audio;
 mod def_const;
 mod def_input;
 mod def_plugins;
 mod def_settings;
-mod gifs;
 #[cfg(any(target_os = "macos", target_os = "windows"))]
 mod input_crossterm;
 #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
@@ -15,10 +15,14 @@ mod vis_crossterm;
 #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
 mod vis_led;
 mod vis_null;
+use animations::ANIMATIONS;
+use audio::Sound;
 use core::time;
+use def_const::SOUND_PATHS;
+use def_input::Input;
 use def_plugins::*;
 use def_settings::Settings;
-use gifs::ANIMATIONS;
+use rodio::OutputStream;
 use std::thread;
 
 fn main() {
@@ -26,7 +30,6 @@ fn main() {
     let mut settings: Settings = Settings {
         visual: ANIMATIONS.get(0).unwrap(),
         brightness: 3,
-        volume: 100, // todo
         link_enabled: true,
         tempo: 120.0,
         quantum: 4.0,
@@ -58,7 +61,11 @@ fn main() {
     let mut current_vis_index: usize = 0;
 
     // Init Sound Device
-    let audio_tx = audio::metro_audio_init();
+    let mut audio_player = audio::AudioPlayer::new();
+    let (_stream, stream_handle) = OutputStream::try_default().unwrap();
+    let sound0 = Sound::new(SOUND_PATHS[0]);
+    let sound1 = Sound::new(SOUND_PATHS[1]);
+    // let test_music = Sound::new(SOUND_PATHS[2]);
 
     // Init Link
     let mut link = ableton_link::Link::new(settings.tempo);
@@ -80,19 +87,21 @@ fn main() {
             // println!("Debug Received: {:?}", x);
 
             match input {
-                def_input::Input::Left => {
+                Input::Volume(x) => {
+                    audio_player.set_volume(x);
+                }
+                Input::Left => {
                     current_vis_index = match current_vis_index.checked_sub(1) {
                         Some(x) => x,
                         None => ANIMATIONS.len() - 1,
                     };
                     vis_plugin.select(ANIMATIONS.get(current_vis_index).unwrap());
                 }
-                def_input::Input::Right => {
+                Input::Right => {
                     current_vis_index = (current_vis_index + 1) % ANIMATIONS.len();
                     vis_plugin.select(ANIMATIONS.get(current_vis_index).unwrap());
                 }
-                def_input::Input::Button => (),
-                def_input::Input::Volume(_) => (),
+                Input::Button => (),
                 _ => (),
             }
         }
@@ -124,10 +133,10 @@ fn main() {
                 last_beat = beat.floor(); // zero to last full beat
 
                 // TRIGGER SOUND:
-                if settings.volume > 0 {
+                if audio_player.get_volume() > 0. {
                     match phase.floor() as u32 {
-                        0 => audio_tx.send(1).unwrap(), // on the first beat
-                        _ => audio_tx.send(0).unwrap(), // on any other beat
+                        0 => audio_player.play(&stream_handle, &sound1), // on the first beat
+                        _ => audio_player.play(&stream_handle, &sound0), // on any other beat
                     }
                 }
             }

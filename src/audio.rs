@@ -1,42 +1,45 @@
+use rodio::Decoder;
 use rodio::*;
-use rodio::{source::Source, Decoder, OutputStream};
 use std::io::Cursor;
-use std::sync::mpsc::{Receiver, Sender};
 use std::thread;
 
-#[derive(Clone)]
-struct Sound {
+pub struct Sound {
     sound: Cursor<Vec<u8>>,
 }
 impl Sound {
-    fn new(path: &str) -> Self {
+    pub fn new(path: &str) -> Self {
         Self {
             sound: Cursor::new(std::fs::read(path).unwrap()),
         }
     }
-    fn play(self, stream_handle: &OutputStreamHandle) {
-        let source = Decoder::new(self.sound).unwrap();
-        stream_handle.play_raw(source.convert_samples()).unwrap();
-    }
 }
 
-pub fn metro_audio_init() -> Sender<u32> {
-    let (audio_tx, audio_rx): (Sender<u32>, Receiver<u32>) = std::sync::mpsc::channel();
+pub struct AudioPlayer {
+    volume: f32,
+}
 
-    let _audio_handle = thread::spawn(move || {
-        let (_stream, stream_handle) = OutputStream::try_default().unwrap();
+impl AudioPlayer {
+    pub fn new() -> Self {
+        Self { volume: 1. }
+    }
 
-        let sound_0 = Sound::new("snd/met_mech.wav");
-        let sound_1 = Sound::new("snd/met_elec.wav");
+    pub fn set_volume(&mut self, volume: f32) {
+        self.volume = volume.clamp(0., 1.);
+    }
 
-        for message in audio_rx {
-            match message {
-                0 => sound_0.clone().play(&stream_handle),
-                1 => sound_1.clone().play(&stream_handle),
-                _ => println!("Sound not available"),
-            };
-        }
-    });
+    pub fn get_volume(&self) -> f32 {
+        self.volume
+    }
 
-    audio_tx
+    pub fn play(&self, handle: &OutputStreamHandle, sound: &Sound) {
+        let sound1 = sound.sound.clone();
+        let sink = Sink::try_new(&handle).unwrap();
+        sink.set_volume(self.volume);
+        let source = Decoder::new(sound1).unwrap();
+        sink.append(source);
+
+        thread::spawn(move || {
+            sink.sleep_until_end();
+        });
+    }
 }

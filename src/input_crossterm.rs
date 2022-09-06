@@ -60,9 +60,20 @@ impl InputPlugin for InputCrossterm {
             Ok(x) => match x {
                 Some(x) => {
                     match x {
+                        KeyCode::Up => Some(Input::Up),
+                        KeyCode::Down => Some(Input::Down),
                         KeyCode::Right => Some(Input::Right),
                         KeyCode::Left => Some(Input::Left),
                         KeyCode::Char(' ') => Some(Input::Button),
+                        KeyCode::Char('1') => Some(Input::Volume(0.)),
+                        KeyCode::Char('2') => Some(Input::Volume(0.125)),
+                        KeyCode::Char('3') => Some(Input::Volume(0.25)),
+                        KeyCode::Char('4') => Some(Input::Volume(0.375)),
+                        KeyCode::Char('5') => Some(Input::Volume(0.5)),
+                        KeyCode::Char('6') => Some(Input::Volume(0.625)),
+                        KeyCode::Char('7') => Some(Input::Volume(0.75)),
+                        KeyCode::Char('8') => Some(Input::Volume(0.875)),
+                        KeyCode::Char('9') => Some(Input::Volume(1.)),
                         _ => {
                             // println!("--> Only acceptable input is 'left arrow', 'right arrow', 'space' or 'q' to quit");
                             None
