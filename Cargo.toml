@@ -7,10 +7,10 @@ edition = "2021"
 [dependencies]
 ableton-link = { git = "https://github.com/jmyhrman/ableton-link-rs" } # More recent than on crates.io
 image = "^0.24.3"
-lazy_static = "1.4.0"
+lazy_static = "^1.4.0"
 rand = "*"
 rgb = "^0.8.33"
-rodio = "0.15.0"
+rodio = "^0.15.0"
 spin_sleep = "^1.1.1"
 
 # 64-bit Raspberry Pi only:

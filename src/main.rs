@@ -1,6 +1,7 @@
 mod animations;
 mod audio;
 mod def_const;
+mod def_grid;
 mod def_input;
 mod def_plugins;
 mod def_settings;
