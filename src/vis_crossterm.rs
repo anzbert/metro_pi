@@ -8,6 +8,7 @@ use crossterm::{
     style::{self, Stylize},
     terminal, QueueableCommand,
 };
+use rgb::RGB8;
 use std::io::{stdout, Write};
 
 pub struct VisCrossterm {
@@ -48,15 +49,15 @@ impl VisPlugin for VisCrossterm {
                 .unwrap();
 
             for i in 0..(GRID_HEIGHT * GRID_WIDTH) {
-                let pixel_color: &(u8, u8, u8) =
-                    &self.animation.frames[current_frame].get(i).unwrap();
+                let pixel_color: &RGB8 =
+                    &self.animation.frames[current_frame].pixels.get(i).unwrap();
 
                 let x = (i % (GRID_WIDTH) + 1) * 2;
                 let y = i / (GRID_HEIGHT) + 1;
 
                 // Using ansi colors for compatibility with macos terminal, which doesnt support full RGB
                 let ansi_color = style::Color::AnsiValue(
-                    coolor::Rgb::new(pixel_color.0, pixel_color.1, pixel_color.2)
+                    coolor::Rgb::new(pixel_color.r, pixel_color.g, pixel_color.b)
                         .to_ansi()
                         .code,
                 );

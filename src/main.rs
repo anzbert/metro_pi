@@ -25,7 +25,6 @@ use def_input::Input;
 use def_plugins::*;
 use def_settings::Settings;
 use rodio::OutputStream;
-use std::thread;
 
 fn main() {
     // SETTINGS
