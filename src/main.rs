@@ -4,6 +4,7 @@ mod def_const;
 mod def_input;
 mod def_plugins;
 mod def_settings;
+mod font;
 #[cfg(any(target_os = "macos", target_os = "windows"))]
 mod input_crossterm;
 #[cfg(all(target_arch = "aarch64", target_os = "linux"))]

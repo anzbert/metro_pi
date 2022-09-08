@@ -10,6 +10,7 @@ use std::result::Result;
 pub enum VisType {
     Full,
     Partial,
+    Static,
 }
 
 lazy_static! {
