@@ -14,6 +14,7 @@ pub enum VisType {
     Full,
     Partial,
     Static,
+    BeatIndependent,
 }
 
 lazy_static! {
@@ -38,6 +39,7 @@ lazy_static! {
                 .unwrap(),
         );
         vec.push(Ring::construct());
+        vec.push(TextTest::construct());
 
         return vec;
     };
@@ -112,23 +114,20 @@ impl Ring {
             for z in 0..i {
                 let (x, y) = RING[z];
                 let index = coord_to_index((x, y), GRID_WIDTH);
-                frame[index] = RGB8 {
-                    r: 100,
-                    g: 100,
-                    b: 100,
-                }
+                frame[index] = RGB8 { r: 200, g: 0, b: 0 }
             }
             frames.push(IndexedMatrix::new(frame, 8, 8));
         }
-        RgbAnimation::new(VisType::Full, frames)
+        RgbAnimation::new(VisType::BeatIndependent, frames)
     }
 }
 
 struct TextTest {}
 impl TextTest {
-    fn construct() {
-        let test_text = "helloworld";
+    fn construct() -> RgbAnimation {
+        let test_text = "     hello world ";
         let text1 = font::get_string_sequence(test_text.to_string());
         let sequence = font::sequence_to_matrix(text1);
+        font::animation_from_sequence(sequence)
     }
 }

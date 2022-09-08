@@ -7,6 +7,7 @@ pub trait InputPlugin {
 pub trait VisPlugin {
     fn new(animation: &'static RgbAnimation, brightness: u8) -> Self;
     fn update(&mut self, quantum: f64, phase: f64);
+    // fn show_text(&mut self, textAnimation: &'static RgbAnimation);
     fn select(&mut self, animation: &'static RgbAnimation);
     fn set_brightness(&mut self, value: u8);
 }

@@ -12,4 +12,6 @@ impl VisPlugin for VisNull {
     fn select(&mut self, _animation: &RgbAnimation) {}
 
     fn set_brightness(&mut self, _value: u8) {}
+
+    // fn show_text(&mut self, _textAnimation: &RgbAnimation) {}
 }

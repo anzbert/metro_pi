@@ -1,5 +1,5 @@
 use crate::{
-    animations::RgbAnimation,
+    animations::{RgbAnimation, VisType},
     def_const::{GRID_HEIGHT, GRID_WIDTH},
     def_plugins::VisPlugin,
 };
@@ -31,6 +31,8 @@ impl VisPlugin for VisCrossterm {
     }
 
     fn update(&mut self, quantum: f64, phase: f64) {
+        if self.animation.playback == VisType::BeatIndependent {}
+
         let number_of_frames_in_animation = self.animation.frames.len();
         let bar_percentage = phase / quantum;
         let current_frame: usize =

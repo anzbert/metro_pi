@@ -1,6 +1,6 @@
 use crate::{
     animations::{RgbAnimation, VisType},
-    def_grid::IndexedMatrix,
+    def_grid::{IndexedMatrix, XYMatrix},
 };
 use lazy_static::lazy_static;
 use rgb::RGB8;
@@ -40,8 +40,8 @@ pub fn get_string_sequence(source: String) -> Vec<IndexedMatrix<RGB8>> {
         }
         match character {
             ' ' => sequence.push(IndexedMatrix::new(
-                Vec::from([RGB8 { r: 0, g: 0, b: 0 }; 10]),
-                2,
+                Vec::from([RGB8 { r: 0, g: 0, b: 0 }; 25]),
+                5,
                 5,
             )),
             _ => {}
@@ -81,15 +81,24 @@ pub fn sequence_to_matrix(seq: Vec<IndexedMatrix<RGB8>>) -> IndexedMatrix<RGB8> 
     IndexedMatrix::new(output, seq.len() * 6, 8)
 }
 
-// pub fn animation_from_sequence(sequence: Vec<RGB8>) {
-//     assert_eq!(sequence.len() % 8, 0);
-//     let screens = (sequence.len() - 64) / 8;
-//     for screen_index in 0..screens {
-//         for row in 0..8 {
-//             todo!();
-//         }
-//     }
-// }
+pub fn animation_from_sequence(sequence: IndexedMatrix<RGB8>) -> RgbAnimation {
+    assert_eq!(sequence.pixels.len() % 8, 0);
+
+    let screens = 1 + ((sequence.pixels.len() - 64) / 8);
+
+    let bla = sequence.to_xy_matrix();
+
+    let mut animation = RgbAnimation::default();
+
+    for screen_index in 0..screens {
+        let screen = Vec::from(&bla.pixels[screen_index..screen_index + 8]);
+        animation
+            .frames
+            .push(XYMatrix::new(screen).to_indexed_matrix())
+    }
+
+    animation
+}
 
 #[cfg(test)]
 mod tests {
