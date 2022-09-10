@@ -7,11 +7,11 @@ impl VisPlugin for VisNull {
         Self {}
     }
 
-    fn update(&mut self, _quantum: f64, _phase: f64) {}
-
     fn select(&mut self, _animation: &RgbAnimation) {}
 
     fn set_brightness(&mut self, _value: u8) {}
+
+    fn update(&mut self, quantum: f64, phase: f64) {}
 
     // fn show_text(&mut self, _textAnimation: &RgbAnimation) {}
 }

@@ -86,6 +86,7 @@ impl RgbAnimation {
 
             output.frames.push(indexed_matrix);
         }
+
         Ok(output)
     }
     pub fn new(playback: VisType, frames: Vec<IndexedMatrix<RGB8>>) -> Self {
@@ -125,7 +126,7 @@ impl Ring {
 struct TextTest {}
 impl TextTest {
     fn construct() -> RgbAnimation {
-        let test_text = "     hello world ";
+        let test_text = " hallo leute ";
         let text1 = font::get_string_sequence(test_text.to_string());
         let sequence = font::sequence_to_matrix(text1);
         font::animation_from_sequence(sequence)

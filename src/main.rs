@@ -25,6 +25,7 @@ use def_input::Input;
 use def_plugins::*;
 use def_settings::Settings;
 use rodio::OutputStream;
+use std::time::Instant;
 
 fn main() {
     // SETTINGS
@@ -77,6 +78,9 @@ fn main() {
     let mut last_tempo: f64 = settings.tempo;
     let mut last_beat: f64 = 0.0;
 
+    // DELTA TIME
+    let mut d_time = Instant::now();
+
     // ---------------------------------------------------------------------------- //
     #[allow(unused_labels)]
     'main: loop {
@@ -102,7 +106,9 @@ fn main() {
                     current_vis_index = (current_vis_index + 1) % ANIMATIONS.len();
                     vis_plugin.select(ANIMATIONS.get(current_vis_index).unwrap());
                 }
-                Input::Button => (),
+                Input::Button => {
+                    vis_plugin.select(ANIMATIONS.get(5).unwrap());
+                }
                 _ => (),
             }
         }
@@ -156,5 +162,8 @@ fn main() {
             });
             last_tempo = settings.tempo;
         }
+
+        // Update delta-time
+        d_time = Instant::now();
     }
 }

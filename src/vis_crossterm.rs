@@ -9,15 +9,20 @@ use crossterm::{
     terminal, QueueableCommand,
 };
 use rgb::RGB8;
-use std::io::{stdout, Write};
+use std::{
+    io::{stdout, Write},
+    time::{Duration, Instant},
+};
 
-pub struct VisCrossterm {
-    animation: &'static RgbAnimation,
+pub struct VisCrossterm<'a> {
+    metro_animation: &'a RgbAnimation,
+    play_once_animation: Option<&'a RgbAnimation>,
+    select_time: Instant,
     last_frame: usize,
 }
 
-impl VisPlugin for VisCrossterm {
-    fn new(animation: &'static RgbAnimation, _brightness: u8) -> VisCrossterm {
+impl<'a> VisPlugin for VisCrossterm<'a> {
+    fn new(metro_animation: &'a RgbAnimation, _brightness: u8) -> VisCrossterm {
         let mut stdout = stdout();
         stdout
             .queue(terminal::Clear(terminal::ClearType::All))
@@ -25,21 +30,37 @@ impl VisPlugin for VisCrossterm {
         stdout.flush().unwrap();
 
         Self {
-            animation,
+            select_time: Instant::now(),
+            metro_animation,
             last_frame: 0,
+            play_once_animation: None,
         }
     }
 
     fn update(&mut self, quantum: f64, phase: f64) {
-        if self.animation.playback == VisType::BeatIndependent {}
+        let animation;
+        let current_frame;
+        if let Some(anim) = self.play_once_animation {
+            animation = self.play_once_animation.unwrap();
 
-        let number_of_frames_in_animation = self.animation.frames.len();
-        let bar_percentage = phase / quantum;
-        let current_frame: usize =
-            (number_of_frames_in_animation as f64 * bar_percentage).floor() as usize;
+            // let number_of_frames_in_animation = animation.frames.len();
+            let elapsed_time = self.select_time.elapsed().as_millis() as usize;
+
+            if let Some(f) = animation.frames.get(elapsed_time / 100) {
+                current_frame = elapsed_time / 100;
+            } else {
+                self.play_once_animation = None;
+                current_frame = animation.frames.len() - 1;
+            }
+        } else {
+            animation = self.metro_animation;
+            let number_of_frames_in_animation = animation.frames.len();
+            let bar_percentage = phase / quantum;
+            current_frame =
+                (number_of_frames_in_animation as f64 * bar_percentage).floor() as usize;
+        }
 
         if current_frame != self.last_frame {
-            // println!("frame: {}", current_frame);
             let mut stdout = stdout();
 
             stdout
@@ -51,8 +72,7 @@ impl VisPlugin for VisCrossterm {
                 .unwrap();
 
             for i in 0..(GRID_HEIGHT * GRID_WIDTH) {
-                let pixel_color: &RGB8 =
-                    &self.animation.frames[current_frame].pixels.get(i).unwrap();
+                let pixel_color: &RGB8 = animation.frames[current_frame].pixels.get(i).unwrap();
 
                 let x = (i % (GRID_WIDTH) + 1) * 2;
                 let y = i / (GRID_HEIGHT) + 1;
@@ -73,7 +93,7 @@ impl VisPlugin for VisCrossterm {
             stdout
                 .queue(cursor::MoveToNextLine(2))
                 .unwrap()
-                .queue(style::Print(INFO))
+                .queue(style::Print(INFO_TEXT))
                 .unwrap()
                 .queue(cursor::MoveToNextLine(2))
                 .unwrap()
@@ -84,11 +104,19 @@ impl VisPlugin for VisCrossterm {
         }
     }
 
-    fn select(&mut self, animation: &'static RgbAnimation) {
-        self.animation = animation;
+    fn select(&mut self, animation: &'a RgbAnimation) {
+        match animation.playback {
+            VisType::BeatIndependent => {
+                self.play_once_animation = Some(animation);
+            }
+            _ => {
+                self.metro_animation = animation;
+            }
+        }
+        self.select_time = Instant::now();
     }
 
     fn set_brightness(&mut self, _value: u8) {}
 }
 
-pub const INFO: &str = "L: <- / R: -> / Btn: Space / Vol: 1-9 / Quit: q ";
+pub const INFO_TEXT: &str = "L: <- / R: -> / Btn: Space / Vol: 1-9 / Quit: q ";

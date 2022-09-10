@@ -7,20 +7,26 @@ use rgb::RGB8;
 
 lazy_static! {
     static ref LETTERS_5X5: RgbAnimation = {
-        RgbAnimation::new_from_gif(include_bytes!("../img/alphabet_5x5.gif"), VisType::Static)
-            .unwrap()
+        RgbAnimation::new_from_gif(
+            include_bytes!("../img/alphabet_5x5.gif"),
+            VisType::BeatIndependent,
+        )
+        .unwrap()
     };
 }
 lazy_static! {
     static ref NUMBERS_5X5: RgbAnimation = {
-        RgbAnimation::new_from_gif(include_bytes!("../img/numbers_5x5.gif"), VisType::Static)
-            .unwrap()
+        RgbAnimation::new_from_gif(
+            include_bytes!("../img/numbers_5x5.gif"),
+            VisType::BeatIndependent,
+        )
+        .unwrap()
     };
 }
 
 pub fn get_string_sequence(source: String) -> Vec<IndexedMatrix<RGB8>> {
     let mut sequence: Vec<IndexedMatrix<RGB8>> = Vec::new();
-    for character in source.trim().chars() {
+    for character in source.chars() {
         if character.is_ascii_alphabetic() {
             sequence.push(
                 LETTERS_5X5
@@ -89,6 +95,7 @@ pub fn animation_from_sequence(sequence: IndexedMatrix<RGB8>) -> RgbAnimation {
     let bla = sequence.to_xy_matrix();
 
     let mut animation = RgbAnimation::default();
+    animation.playback = VisType::BeatIndependent;
 
     for screen_index in 0..screens {
         let screen = Vec::from(&bla.pixels[screen_index..screen_index + 8]);
