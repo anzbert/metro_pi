@@ -49,7 +49,7 @@ fn main() {
     let mut input_plugin = input_crossterm::InputCrossterm::new();
 
     #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
-    let mut input_plugin = input_pins::InputHardware::new();
+    let mut input_plugin = input_hardware::InputHardware::new();
 
     #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
     let mut vis_plugin = vis_led::VisLed::new(settings.visual, settings.brightness);

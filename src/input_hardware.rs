@@ -1,10 +1,10 @@
-use crate::def_plugins::{Input, InputPlugin};
+use crate::{def_input::Input, def_plugins::InputPlugin};
 use rppal::gpio::{Gpio, InputPin, Level};
 
 pub struct InputHardware {
     pin1: InputPin,
     pin1_stored_state: Level,
-    input_state: Input,
+    input_state: Option<Input>,
 }
 
 impl InputPlugin for InputHardware {
@@ -14,7 +14,7 @@ impl InputPlugin for InputHardware {
         Self {
             pin1: gpio.get(27).unwrap().into_input_pullup(),
             pin1_stored_state: Level::High,
-            input_state: Input::default(),
+            input_state: None,
         }
     }
 
@@ -27,11 +27,11 @@ impl InputPlugin for InputHardware {
             None
         } else {
             self.pin1_stored_state = updated_state;
-            self.input_state.button = match updated_state {
-                Level::Low => Input::Button,
+            self.input_state = match updated_state {
+                Level::Low => Some(Input::Button),
                 Level::High => None,
             };
-            Some(self.input_state)
+            self.input_state
         }
     }
 }

@@ -1,18 +1,18 @@
 use crate::{
+    animations::RgbAnimation,
     def_const::{GRID_HEIGHT, GRID_WIDTH},
     def_plugins::VisPlugin,
-    gifs::{self, RgbaImageData, Visualization},
 };
 use rs_ws281x::*;
 
 pub struct VisLed<'a> {
-    gif: &'a RgbaImageData,
+    metro_animation: &'a RgbAnimation,
     controller: Controller,
     last_frame: usize,
 }
 
 impl<'a> VisPlugin for VisLed<'a> {
-    fn new(visual: Visualization, brightness: u8) -> VisLed<'a> {
+    fn new(metro_animation: &'a RgbAnimation, brightness: u8) -> VisLed<'a> {
         let controller = ControllerBuilder::new()
             .freq(800_000)
             .dma(10)
@@ -30,7 +30,7 @@ impl<'a> VisPlugin for VisLed<'a> {
 
         Self {
             controller,
-            gif: gifs::GIFS.get(&visual).unwrap(),
+            metro_animation,
             last_frame: 0,
         }
     }
@@ -40,15 +40,18 @@ impl<'a> VisPlugin for VisLed<'a> {
         let leds = self.controller.leds_mut(0);
 
         // 2) update leds:
-        let number_of_frames_in_animation = self.gif.frames.len();
+        let number_of_frames_in_animation = self.metro_animation.frames.len();
         let bar_percentage = phase / quantum;
         let current_frame = (number_of_frames_in_animation as f64 * bar_percentage) as usize;
 
         if current_frame != self.last_frame {
             for (i, led) in leds.iter_mut().enumerate() {
                 // *led = [0, 255, 255, 0]; // <- example
-                let pixel_color = self.gif.frames[current_frame].pixels.get(i).unwrap();
-                *led = [pixel_color.0, pixel_color.1, pixel_color.2, pixel_color.3];
+                let pixel_color = self.metro_animation.frames[current_frame]
+                    .pixels
+                    .get(i)
+                    .unwrap();
+                *led = [pixel_color.r, pixel_color.g, pixel_color.b, 255];
             }
 
             // 3) render:
@@ -57,9 +60,9 @@ impl<'a> VisPlugin for VisLed<'a> {
         }
     }
 
-    fn select(&mut self, visual: Visualization) {
-        self.gif = gifs::GIFS.get(&visual).unwrap();
-        let pixels_in_first_gif_frame = self.gif.frames.get(0).unwrap().pixels.len();
+    fn select(&mut self, animation: &'a RgbAnimation) {
+        self.metro_animation = animation;
+        let pixels_in_first_gif_frame = self.metro_animation.frames.get(0).unwrap().pixels.len();
         if GRID_HEIGHT * GRID_WIDTH != pixels_in_first_gif_frame {
             panic!(
                 "led matrix ({} x {} = {}) does not match gif pixel size ({})",

@@ -3,9 +3,9 @@ use crate::def_plugins::*;
 use crossterm::event::{read, Event, KeyCode};
 use crossterm::terminal::{self};
 use crossterm::ExecutableCommand;
-
 use std::sync::mpsc::{Receiver, Sender};
 use std::thread::{self};
+
 pub struct InputCrossterm {
     poll_tx: Sender<Poke>,
     poll_rx: Receiver<Option<KeyCode>>,
