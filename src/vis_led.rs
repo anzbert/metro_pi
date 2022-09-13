@@ -1,12 +1,11 @@
-use crate::{
-    animations::RgbAnimation,
-    def_const::{GRID_HEIGHT, GRID_WIDTH},
-    def_plugins::VisPlugin,
-};
+use crate::{animations::RgbAnimation, def_plugins::VisPlugin};
 use rs_ws281x::*;
+use std::time::Instant;
 
 pub struct VisLed<'a> {
     metro_animation: &'a RgbAnimation,
+    play_once_animation: Option<&'a RgbAnimation>,
+    play_once_select_time: Instant,
     controller: Controller,
     last_frame: usize,
 }
@@ -31,6 +30,8 @@ impl<'a> VisPlugin for VisLed<'a> {
         Self {
             controller,
             metro_animation,
+            play_once_animation: None,
+            play_once_select_time: Instant::now(),
             last_frame: 0,
         }
     }
@@ -60,21 +61,16 @@ impl<'a> VisPlugin for VisLed<'a> {
         }
     }
 
-    fn select(&mut self, animation: &'a RgbAnimation) {
-        self.metro_animation = animation;
-        let pixels_in_first_gif_frame = self.metro_animation.frames.get(0).unwrap().pixels.len();
-        if GRID_HEIGHT * GRID_WIDTH != pixels_in_first_gif_frame {
-            panic!(
-                "led matrix ({} x {} = {}) does not match gif pixel size ({})",
-                GRID_HEIGHT,
-                GRID_WIDTH,
-                GRID_HEIGHT * GRID_WIDTH,
-                pixels_in_first_gif_frame
-            );
-        }
-    }
-
     fn set_brightness(&mut self, value: u8) {
         self.controller.set_brightness(0, value);
+    }
+
+    fn select_metro_loop(&mut self, animation: &'a RgbAnimation) {
+        self.metro_animation = animation;
+    }
+
+    fn select_single_play(&mut self, animation: &'static RgbAnimation) {
+        self.play_once_animation = Some(animation);
+        self.play_once_select_time = Instant::now();
     }
 }

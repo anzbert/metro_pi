@@ -18,7 +18,7 @@ pub enum VisType {
 }
 
 lazy_static! {
-    pub static ref ANIMATIONS: Vec<RgbAnimation> = {
+    pub static ref METRO_ANIMATIONS: Vec<RgbAnimation> = {
         let mut vec = Vec::new();
         vec.push(
             RgbAnimation::new_from_gif(include_bytes!("../img/clock.gif"), VisType::Full).unwrap(),
@@ -39,6 +39,15 @@ lazy_static! {
                 .unwrap(),
         );
         vec.push(Ring::construct());
+
+        return vec;
+    };
+}
+
+lazy_static! {
+    pub static ref TEXT_ANIMATIONS: Vec<RgbAnimation> = {
+        let mut vec = Vec::new();
+
         vec.push(TextTest::construct());
 
         return vec;

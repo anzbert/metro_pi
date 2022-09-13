@@ -1,6 +1,6 @@
 use crate::{
-    animations::{RgbAnimation, VisType},
-    def_const::{GRID_HEIGHT, GRID_WIDTH},
+    animations::RgbAnimation,
+    def_const::{FRAME_TIME, GRID_HEIGHT, GRID_WIDTH},
     def_plugins::VisPlugin,
 };
 use crossterm::{
@@ -11,13 +11,13 @@ use crossterm::{
 use rgb::RGB8;
 use std::{
     io::{stdout, Write},
-    time::{Duration, Instant},
+    time::Instant,
 };
 
 pub struct VisCrossterm<'a> {
     metro_animation: &'a RgbAnimation,
     play_once_animation: Option<&'a RgbAnimation>,
-    select_time: Instant,
+    play_once_select_time: Instant,
     last_frame: usize,
 }
 
@@ -30,7 +30,7 @@ impl<'a> VisPlugin for VisCrossterm<'a> {
         stdout.flush().unwrap();
 
         Self {
-            select_time: Instant::now(),
+            play_once_select_time: Instant::now(),
             metro_animation,
             last_frame: 0,
             play_once_animation: None,
@@ -40,14 +40,14 @@ impl<'a> VisPlugin for VisCrossterm<'a> {
     fn update(&mut self, quantum: f64, phase: f64) {
         let animation;
         let current_frame;
-        if let Some(anim) = self.play_once_animation {
-            animation = self.play_once_animation.unwrap();
+        if let Some(single_play_animation) = self.play_once_animation {
+            animation = single_play_animation;
 
             // let number_of_frames_in_animation = animation.frames.len();
-            let elapsed_time = self.select_time.elapsed().as_millis() as usize;
+            let elapsed_time = self.play_once_select_time.elapsed().as_millis() as usize;
 
-            if let Some(f) = animation.frames.get(elapsed_time / 100) {
-                current_frame = elapsed_time / 100;
+            if let Some(_) = animation.frames.get(elapsed_time / FRAME_TIME) {
+                current_frame = elapsed_time / FRAME_TIME;
             } else {
                 self.play_once_animation = None;
                 current_frame = animation.frames.len() - 1;
@@ -104,16 +104,13 @@ impl<'a> VisPlugin for VisCrossterm<'a> {
         }
     }
 
-    fn select(&mut self, animation: &'a RgbAnimation) {
-        match animation.playback {
-            VisType::BeatIndependent => {
-                self.play_once_animation = Some(animation);
-            }
-            _ => {
-                self.metro_animation = animation;
-            }
-        }
-        self.select_time = Instant::now();
+    fn select_metro_loop(&mut self, animation: &'a RgbAnimation) {
+        self.metro_animation = animation;
+    }
+
+    fn select_single_play(&mut self, animation: &'static RgbAnimation) {
+        self.play_once_animation = Some(animation);
+        self.play_once_select_time = Instant::now();
     }
 
     fn set_brightness(&mut self, _value: u8) {}

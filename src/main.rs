@@ -17,7 +17,7 @@ mod vis_crossterm;
 #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
 mod vis_led;
 mod vis_null;
-use animations::ANIMATIONS;
+use animations::{METRO_ANIMATIONS, TEXT_ANIMATIONS};
 use audio::Sound;
 use core::time;
 use def_const::SOUND_PATHS;
@@ -30,7 +30,7 @@ use std::time::Instant;
 fn main() {
     // SETTINGS
     let mut settings: Settings = Settings {
-        visual: ANIMATIONS.get(0).unwrap(),
+        visual: METRO_ANIMATIONS.get(0).unwrap(),
         brightness: 3,
         link_enabled: true,
         tempo: 120.0,
@@ -98,16 +98,16 @@ fn main() {
                 Input::Left => {
                     current_vis_index = match current_vis_index.checked_sub(1) {
                         Some(x) => x,
-                        None => ANIMATIONS.len() - 1,
+                        None => TEXT_ANIMATIONS.len() - 1,
                     };
-                    vis_plugin.select(ANIMATIONS.get(current_vis_index).unwrap());
+                    vis_plugin.select_metro_loop(METRO_ANIMATIONS.get(current_vis_index).unwrap());
                 }
                 Input::Right => {
-                    current_vis_index = (current_vis_index + 1) % ANIMATIONS.len();
-                    vis_plugin.select(ANIMATIONS.get(current_vis_index).unwrap());
+                    current_vis_index = (current_vis_index + 1) % METRO_ANIMATIONS.len();
+                    vis_plugin.select_metro_loop(METRO_ANIMATIONS.get(current_vis_index).unwrap());
                 }
                 Input::Button => {
-                    vis_plugin.select(ANIMATIONS.get(5).unwrap());
+                    vis_plugin.select_single_play(TEXT_ANIMATIONS.get(0).unwrap());
                 }
                 _ => (),
             }
