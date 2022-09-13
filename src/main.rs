@@ -6,7 +6,7 @@ mod def_input;
 mod def_plugins;
 mod def_settings;
 mod font;
-#[cfg(any(target_os = "macos", target_os = "windows"))]
+// #[cfg(any(target_os = "macos", target_os = "windows"))]
 mod input_crossterm;
 #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
 mod input_hardware;
@@ -45,11 +45,11 @@ fn main() {
     // #[allow(unused_variables, unused_mut)]
     // let mut input_plugin = input_null::InputNull::new();
 
-    #[cfg(any(target_os = "macos", target_os = "windows"))]
+    // #[cfg(any(target_os = "macos", target_os = "windows"))]
     let mut input_plugin = input_crossterm::InputCrossterm::new();
 
-    #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
-    let mut input_plugin = input_hardware::InputHardware::new();
+    // #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
+    // let mut input_plugin = input_hardware::InputHardware::new();
 
     #[cfg(all(target_arch = "aarch64", target_os = "linux"))]
     let mut vis_plugin = vis_led::VisLed::new(settings.visual, settings.brightness);
