@@ -3,6 +3,7 @@ use crate::{
     def_const::{FRAME_TIME, GRID_HEIGHT, GRID_WIDTH},
     def_plugins::VisPlugin,
 };
+
 use crossterm::{
     cursor,
     style::{self, Stylize},

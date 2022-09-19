@@ -25,7 +25,7 @@ use def_input::Input;
 use def_plugins::*;
 use def_settings::Settings;
 use rodio::OutputStream;
-use std::time::Instant;
+use std::process;
 
 fn main() {
     // SETTINGS
@@ -70,16 +70,16 @@ fn main() {
     // let test_music = Sound::new(SOUND_PATHS[2]);
 
     // Init Link
-    let mut link = ableton_link::Link::new(settings.tempo);
-    let clock = link.clock();
-    link.enable(true);
-    link.enable_start_stop_sync(true);
+    let mut abl_link = rusty_link::AblLink::new(settings.tempo);
+    abl_link.enable(true);
+    abl_link.enable_start_stop_sync(true);
+    let mut session_state = rusty_link::SessionState::new();
 
     let mut last_tempo: f64 = settings.tempo;
     let mut last_beat: f64 = 0.0;
 
     // DELTA TIME
-    let mut d_time = Instant::now();
+    // let mut d_time = Instant::now();
 
     // ---------------------------------------------------------------------------- //
     #[allow(unused_labels)]
@@ -109,61 +109,59 @@ fn main() {
                 Input::Button => {
                     vis_plugin.select_single_play(TEXT_ANIMATIONS.get(0).unwrap());
                 }
+                Input::Quit => {
+                    abl_link.enable(false);
+                    process::exit(0);
+                }
                 _ => (),
             }
         }
 
-        // GET CURRENT SESSION STATE:
-        link.with_app_session_state(|session_state| {
-            settings.tempo = session_state.tempo();
-            let time = clock.micros();
-            let beat = session_state.beat_at_time(time, settings.quantum);
-            let phase = session_state.phase_at_time(time, settings.quantum);
-            let _peers = link.num_peers();
-            let _playing = session_state.is_playing();
+        session_state.capture_app_session_state(&abl_link);
+        settings.tempo = session_state.tempo();
+        let time = abl_link.clock_micros();
+        let beat = session_state.beat_at_time(time, settings.quantum);
+        let phase = session_state.phase_at_time(time, settings.quantum);
+        let _peers = abl_link.num_peers();
+        let _playing = session_state.is_playing();
 
-            // println!(
-            //     "playing:{}, q:{:.2}, tempo:{:.2}, beat:{:.2}, phase:{:.2}, peers:{}",
-            //     _playing,
-            //     settings.quantum,
-            //     session_state.tempo(),
-            //     beat,
-            //     phase,
-            //     _peers
-            // );
+        // println!(
+        //     "playing:{}, q:{:.2}, tempo:{:.2}, beat:{:.2}, phase:{:.2}, peers:{}",
+        //     _playing,
+        //     settings.quantum,
+        //     session_state.tempo(),
+        //     beat,
+        //     phase,
+        //     _peers
+        // );
 
-            // DRAW OUTPUT:
-            vis_plugin.update(settings.quantum, phase);
+        // DRAW OUTPUT:
+        vis_plugin.update(settings.quantum, phase);
 
-            // EVERY FULL BEAT:
-            if beat - last_beat >= 1.0 {
-                last_beat = beat.floor(); // zero to last full beat
+        // EVERY FULL BEAT:
+        if beat - last_beat >= 1.0 {
+            last_beat = beat.floor(); // zero to last full beat
 
-                // TRIGGER SOUND:
-                if audio_player.get_volume() > 0. {
-                    match phase.floor() as u32 {
-                        0 => audio_player.play(&stream_handle, &sound1), // on the first beat
-                        _ => audio_player.play(&stream_handle, &sound0), // on any other beat
-                    }
+            // TRIGGER SOUND:
+            if audio_player.get_volume() > 0. {
+                match phase.floor() as u32 {
+                    0 => audio_player.play(&stream_handle, &sound1), // on the first beat
+                    _ => audio_player.play(&stream_handle, &sound0), // on any other beat
                 }
             }
-        });
+        }
 
         // UPDATE LINK WITH CONTROL CHANGES:
         if settings.link_enabled {
-            link.enable(true);
+            abl_link.enable(true);
         } else {
-            link.enable(false);
+            abl_link.enable(false);
         }
         if !last_tempo.eq(&settings.tempo) {
-            link.with_app_session_state(|mut session_state| {
-                session_state.set_tempo(settings.tempo, clock.micros());
-                session_state.commit();
-            });
+            session_state.set_tempo(settings.tempo, abl_link.clock_micros());
+            abl_link.commit_app_session_state(&session_state);
+
             last_tempo = settings.tempo;
         }
-
-        // Update delta-time
-        d_time = Instant::now();
     }
 }

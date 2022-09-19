@@ -1,5 +1,3 @@
-use std::time::Duration;
-
 use crate::{animations::RgbAnimation, def_input::Input};
 pub trait InputPlugin {
     fn new() -> Self;

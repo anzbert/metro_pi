@@ -1,7 +1,4 @@
-use rgb::RGB8;
-use std::ops::Add;
-
-/// Matrix as a 1D Indexed Vector in Horizontal Rows
+// / Matrix as a 1D Indexed Vector in Horizontal Rows
 #[derive(Clone)]
 pub struct IndexedMatrix<T: Copy> {
     pub pixels: Vec<T>,

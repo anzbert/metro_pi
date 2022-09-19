@@ -1,5 +1,6 @@
 #[derive(Copy, Clone)]
 pub enum Input {
+    Quit,
     Left,
     Right,
     Up,
