@@ -13,7 +13,7 @@ use std::result::Result;
 pub enum VisType {
     Full,
     Partial,
-    Static,
+
     BeatIndependent,
 }
 
@@ -59,12 +59,12 @@ pub struct RgbAnimation {
     pub frames: Vec<IndexedMatrix<RGB8>>,
 }
 impl RgbAnimation {
-    pub fn dimensions(&self) -> (usize, usize) {
-        (
-            self.frames.get(0).unwrap().width,
-            self.frames.get(0).unwrap().height,
-        )
-    }
+    // pub fn dimensions(&self) -> (usize, usize) {
+    //     (
+    //         self.frames.get(0).unwrap().width,
+    //         self.frames.get(0).unwrap().height,
+    //     )
+    // }
     pub fn new_from_gif(bytes: &[u8], playback: VisType) -> Result<RgbAnimation, Box<dyn Error>> {
         let decoder = GifDecoder::new(bytes)?;
 

@@ -26,17 +26,12 @@ impl InputPlugin for InputCrossterm {
 
             for message in other_thread_rx {
                 match read().unwrap() {
-                    // Event::Key(event) => match event.code {
-                    //     KeyCode::Char('q') => std::process::exit(0),
-                    //     _ => last_pressed = Some(event.code),
-                    // },
                     Event::Resize(_width, _height) => {
                         let mut stdout = std::io::stdout();
                         stdout
                             .execute(terminal::Clear(terminal::ClearType::All))
                             .unwrap();
                     }
-                    // Event::Mouse(MouseEventKind::ScrollUp) => (),
                     _ => (),
                 };
                 match message {

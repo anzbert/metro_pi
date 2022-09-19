@@ -16,14 +16,14 @@ pub fn coord_to_index(input: (usize, usize), grid_size_x: usize) -> usize {
     index
 }
 
-pub fn rotate_indexed_matrix<T>(input: Vec<T>, grid_size_x: usize) {
-    assert_eq!(
-        input.len() % grid_size_x,
-        0,
-        "Input vector length {} not cleanly divisible by width {}",
-        input.len(),
-        grid_size_x
-    );
+// pub fn rotate_indexed_matrix<T>(input: Vec<T>, grid_size_x: usize) {
+//     assert_eq!(
+//         input.len() % grid_size_x,
+//         0,
+//         "Input vector length {} not cleanly divisible by width {}",
+//         input.len(),
+//         grid_size_x
+//     );
 
-    let grid_size_y = input.len() / grid_size_x;
-}
+//     let grid_size_y = input.len() / grid_size_x;
+// }

@@ -27,24 +27,24 @@ impl<T: Copy> IndexedMatrix<T> {
         }
         XYMatrix::new(y_columns)
     }
-    pub fn add_to_right(&mut self, input: Self) {
-        assert_eq!(
-            input.height, self.height,
-            "can only add a matrix of same height"
-        );
+    // pub fn add_to_right(&mut self, input: Self) {
+    //     assert_eq!(
+    //         input.height, self.height,
+    //         "can only add a matrix of same height"
+    //     );
 
-        let mut output: Vec<T> = Vec::with_capacity(self.pixels.len() + input.pixels.len());
+    //     let mut output: Vec<T> = Vec::with_capacity(self.pixels.len() + input.pixels.len());
 
-        for row in 0..self.height {
-            for p in 0..self.width {
-                output.push(self.pixels[p + row * self.width]);
-            }
-            for p in 0..input.width {
-                output.push(input.pixels[p + row * input.width]);
-            }
-        }
-        self.pixels = output;
-    }
+    //     for row in 0..self.height {
+    //         for p in 0..self.width {
+    //             output.push(self.pixels[p + row * self.width]);
+    //         }
+    //         for p in 0..input.width {
+    //             output.push(input.pixels[p + row * input.width]);
+    //         }
+    //     }
+    //     self.pixels = output;
+    // }
 }
 
 /// 2D Matrix in columns with index x. eg: example_matrix[x][y]
