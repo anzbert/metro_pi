@@ -5,7 +5,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-rusty_link = { git = "https://github.com/anzbert/rusty_link" }
+rusty_link = { git = "https://github.com/anzbert/rusty_link", version = "^0.2.0" }
 image = "^0.24.3"
 lazy_static = "^1.4.0"
 rand = "*"
