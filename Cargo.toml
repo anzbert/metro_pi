@@ -20,4 +20,4 @@ coolor = "^0.5"
 # 64-bit Raspberry Pi only:
 [target.'cfg(all(target_arch = "aarch64", target_os = "linux"))'.dependencies]
 rppal = "^0.13.1"
-rs_ws281x = { git = "https://github.com/rpi-ws281x/rpi-ws281x-rust" }
+rs_ws281x = "^0.4.4"
