@@ -117,7 +117,7 @@ fn main() {
             }
         }
 
-        session_state.capture_app_session_state(&abl_link);
+        abl_link.capture_app_session_state(&mut session_state);
         settings.tempo = session_state.tempo();
         let time = abl_link.clock_micros();
         let beat = session_state.beat_at_time(time, settings.quantum);
