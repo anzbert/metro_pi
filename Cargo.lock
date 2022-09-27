@@ -1171,7 +1171,8 @@ dependencies = [
 [[package]]
 name = "rs_ws281x"
 version = "0.4.4"
-source = "git+https://github.com/rpi-ws281x/rpi-ws281x-rust#b0cf53b4bf1ee565a8363018189120f13cfe3e38"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d86e2301d171e673098d510673e3ed47d25fa8cb091b8015e9d6486c0a8e04f8"
 dependencies = [
  "bindgen 0.60.1",
  "cc",
@@ -1187,8 +1188,8 @@ checksum = "08d43f7aa6b08d49f382cde6a7982047c3426db949b1424bc4b7ec9ae12c6ce2"
 
 [[package]]
 name = "rusty_link"
-version = "0.1.0"
-source = "git+https://github.com/anzbert/rusty_link#a80e0d8f18b99cf7063c1e6decbdd8955327060a"
+version = "0.2.0"
+source = "git+https://github.com/anzbert/rusty_link#71ad4a37502bba336251bb1aa3e2ab5e0ffe41bb"
 dependencies = [
  "bindgen 0.60.1",
  "cmake",
