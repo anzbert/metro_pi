@@ -5,10 +5,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-rusty_link = { git = "https://github.com/anzbert/rusty_link" }
+rand = "*"
+rusty_link = "*"
 image = "^0.24.3"
 lazy_static = "^1.4.0"
-rand = "*"
 rgb = "^0.8.33"
 rodio = "^0.16.0"
 spin_sleep = "^1.1.1"
@@ -20,4 +20,4 @@ coolor = "^0.5"
 # 64-bit Raspberry Pi only:
 [target.'cfg(all(target_arch = "aarch64", target_os = "linux"))'.dependencies]
 rppal = "^0.13.1"
-rs_ws281x = { git = "https://github.com/rpi-ws281x/rpi-ws281x-rust" }
+rs_ws281x = "^0.4.4"

@@ -71,9 +71,9 @@ fn main() {
 
     // Init Link
     let mut abl_link = rusty_link::AblLink::new(settings.tempo);
+    let mut session_state = rusty_link::SessionState::new();
     abl_link.enable(true);
     abl_link.enable_start_stop_sync(true);
-    let mut session_state = rusty_link::SessionState::new();
 
     let mut last_tempo: f64 = settings.tempo;
     let mut last_beat: f64 = 0.0;
@@ -117,7 +117,7 @@ fn main() {
             }
         }
 
-        session_state.capture_app_session_state(&abl_link);
+        abl_link.capture_app_session_state(&mut session_state);
         settings.tempo = session_state.tempo();
         let time = abl_link.clock_micros();
         let beat = session_state.beat_at_time(time, settings.quantum);
