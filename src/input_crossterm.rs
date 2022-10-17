@@ -55,7 +55,10 @@ impl InputPlugin for InputCrossterm {
             Ok(x) => match x {
                 Some(x) => {
                     match x {
-                        KeyCode::Char('q') => Some(Input::Quit),
+                        KeyCode::Char('q') => {
+                            crossterm::terminal::disable_raw_mode().unwrap();
+                            Some(Input::Quit)
+                        }
                         KeyCode::Up => Some(Input::Up),
                         KeyCode::Down => Some(Input::Down),
                         KeyCode::Right => Some(Input::Right),
